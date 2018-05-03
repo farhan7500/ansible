@@ -198,8 +198,7 @@ class TestHpe3parvolumeset(unittest.TestCase):
         self.assertEqual(
             result, (True, True, "Created volumeset hostname successfully.", {}))
 
-
-# Delete volumeset
+    # Delete volumeset
     @mock.patch('ansible.modules.storage.hpe.hpe3par_volumeset.client')
     def test_delete_volumeset_username_empty(self, mock_client):
         """
