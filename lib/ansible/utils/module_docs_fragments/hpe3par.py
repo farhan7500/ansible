@@ -39,4 +39,3 @@ requirements:
   - Ansible - 2.6
   - hpe3par_sdk 1.0.0
   - WSAPI service should be enabled on the 3PAR storage array.
-    '''
