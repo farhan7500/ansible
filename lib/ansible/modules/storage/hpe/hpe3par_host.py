@@ -180,7 +180,7 @@ null",
     if host_name is None:
         return (False, False, "Host creation failed. Host name is null", {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     try:
         client_obj.login(storage_system_username, storage_system_password)
         if not client_obj.hostExists(host_name):
@@ -227,7 +227,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     try:
         client_obj.login(storage_system_username, storage_system_password)
         if host_persona is not None:
@@ -259,7 +259,7 @@ null",
     if host_name is None:
         return (False, False, "Host deletion failed. Host name is null", {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     try:
         client_obj.login(storage_system_username, storage_system_password)
         if client_obj.hostExists(host_name):
@@ -295,7 +295,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     if chap_name is None:
         return (
             False,
@@ -359,7 +359,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     try:
         client_obj.login(storage_system_username, storage_system_password)
         client_obj.modifyHost(
@@ -406,7 +406,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     if chap_name is None:
         return (
             False,
@@ -476,7 +476,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     try:
         client_obj.login(storage_system_username, storage_system_password)
         mod_request = {
@@ -510,7 +510,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     if host_fc_wwns is None:
         return (
             False,
@@ -551,7 +551,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     if host_fc_wwns is None:
         return (
             False,
@@ -592,7 +592,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     if host_iscsi_names is None:
         return (
             False,
@@ -633,7 +633,7 @@ null",
             "Host modification failed. Host name is null",
             {})
     if len(host_name) < 1 or len(host_name) > 31:
-        return (False, False, "Host create failed. Host name must be atleast 1 character and more than 31 characters", {})
+        return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters", {})
     if host_iscsi_names is None:
         return (
             False,

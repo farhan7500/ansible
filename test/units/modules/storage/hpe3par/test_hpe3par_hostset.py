@@ -446,7 +446,7 @@ class TestHpe3parhostset(unittest.TestCase):
         result = hostset.remove_hosts(
             mock_client.HPE3ParClient, "user", "password", "hostname", ["member1"])
         self.assertEqual(
-            result, (True, False, "No members to remove to the Host set hostname. Nothing to do.", {}))
+            result, (True, False, "No members to remove from the Host set hostname. Nothing to do.", {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_hostset.client')
     def test_remove_host_from_hostset_No_new_members_to_remove_from_the_Host_set_setmembers_none(self, mock_client):
