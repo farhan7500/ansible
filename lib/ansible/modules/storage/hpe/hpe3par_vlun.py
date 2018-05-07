@@ -664,10 +664,10 @@ def main():
     elif module.params["state"] == "unexport_volumeset_from_hostset":
         return_status, changed, msg, issue_attr_dict = (
             unexport_volumeset_from_hostset(client_obj, storage_system_username,
-                                          storage_system_password,
-                                          volume_set_name, lunid,
-                                          host_set_name, node_val, slot,
-                                          card_port))
+                                            storage_system_password,
+                                            volume_set_name, lunid,
+                                            host_set_name, node_val, slot,
+                                            card_port))
     elif module.params["state"] == "export_volumeset_to_host":
         return_status, changed, msg, issue_attr_dict = (
             export_volumeset_to_host(client_obj, storage_system_username,
@@ -677,9 +677,9 @@ def main():
     elif module.params["state"] == "unexport_volumeset_from_host":
         return_status, changed, msg, issue_attr_dict = (
             unexport_volumeset_from_host(client_obj, storage_system_username,
-                                       storage_system_password,
-                                       volume_set_name, lunid, host_name,
-                                       node_val, slot, card_port))
+                                         storage_system_password,
+                                         volume_set_name, lunid, host_name,
+                                         node_val, slot, card_port))
     elif module.params["state"] == "export_volume_to_hostset":
         return_status, changed, msg, issue_attr_dict = (
             export_volume_to_hostset(client_obj, storage_system_username,
@@ -689,9 +689,9 @@ def main():
     elif module.params["state"] == "unexport_volume_from_hostset":
         return_status, changed, msg, issue_attr_dict = (
             unexport_volume_from_hostset(client_obj, storage_system_username,
-                                       storage_system_password,
-                                       volume_name, lunid, host_set_name,
-                                       node_val, slot, card_port))
+                                         storage_system_password,
+                                         volume_name, lunid, host_set_name,
+                                         node_val, slot, card_port))
 
     if return_status:
         if issue_attr_dict:
