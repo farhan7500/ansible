@@ -35,13 +35,13 @@ class TestHpe3parVlun(unittest.TestCase):
             "required": True,
             "choices": [
                 'export_volume_to_host',
-                'unexport_volume_to_host',
+                'unexport_volume_from_host',
                 'export_volumeset_to_host',
-                'unexport_volumeset_to_host',
+                'unexport_volumeset_from_host',
                 'export_volume_to_hostset',
-                'unexport_volume_to_hostset',
+                'unexport_volume_from_hostset',
                 'export_volumeset_to_hostset',
-                'unexport_volumeset_to_hostset'],
+                'unexport_volumeset_from_hostset'],
             "type": 'str'},
         "storage_system_ip": {
             "required": True,
@@ -113,20 +113,20 @@ class TestHpe3parVlun(unittest.TestCase):
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.AnsibleModule')
-    @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.unexport_volume_to_host')
-    def test_main_exit_unexport_volume_to_host(self, mock_unexport_volume_to_host, mock_module, mock_client):
+    @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.unexport_volume_from_host')
+    def test_main_exit_unexport_volume_to_host(self, mock_unexport_volume_from_host, mock_module, mock_client):
         """
         hpe3par vlun - success check
         """
         PARAMS_FOR_UNEXPORT = {'storage_system_ip': '192.168.0.1', 'storage_system_name': '3PAR', 'storage_system_username': 'USER',
-                               'storage_system_password': 'PASS', 'state': 'unexport_volume_to_host', 'volume_name': 'test_vol_name',
+                               'storage_system_password': 'PASS', 'state': 'unexport_volume_from_host', 'volume_name': 'test_vol_name',
                                'volume_set_name': 'test_volset_name', 'lunid': 12, 'autolun': True, 'host_name': 'test_host_name',
                                'host_set_name': 'test_hostset_name', 'node_val': 3, 'slot': 2, 'card_port': 1}
         # This creates a instance of the AnsibleModule mock.
         mock_module.params = PARAMS_FOR_UNEXPORT
         mock_module.return_value = mock_module
         instance = mock_module.return_value
-        mock_unexport_volume_to_host.return_value = (
+        mock_unexport_volume_from_host.return_value = (
             True, True, "Deleted VLUN successfully.", {})
         vlun.main()
         # AnsibleModule.exit_json should be called
@@ -163,14 +163,14 @@ class TestHpe3parVlun(unittest.TestCase):
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.AnsibleModule')
-    @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.unexport_volume_to_hostset')
-    def test_main_exit_unexport_volume_to_hostset(self, mock_unexport_volume_to_hostset, mock_module, mock_client):
+    @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.unexport_volume_from_hostset')
+    def test_main_exit_unexport_volume_from_hostset(self, mock_unexport_volume_from_hostset, mock_module, mock_client):
         """
         hpe3par vlun - success check
         """
         PARAMS_FOR_UNEXPORT = {'storage_system_ip': '192.168.0.1', 'storage_system_name': '3PAR',
                                'storage_system_username': 'USER', 'storage_system_password': 'PASS',
-                               'state': 'unexport_volume_to_hostset', 'volume_name': 'test_vol_name',
+                               'state': 'unexport_volume_from_hostset', 'volume_name': 'test_vol_name',
                                'volume_set_name': 'test_volset_name', 'lunid': 12, 'autolun': True,
                                'host_name': 'test_host_name', 'host_set_name': 'test_hostset_name',
                                'node_val': 3, 'slot': 2, 'card_port': 1}
@@ -178,7 +178,7 @@ class TestHpe3parVlun(unittest.TestCase):
         mock_module.params = PARAMS_FOR_UNEXPORT
         mock_module.return_value = mock_module
         instance = mock_module.return_value
-        mock_unexport_volume_to_hostset.return_value = (
+        mock_unexport_volume_from_hostset.return_value = (
             True, True, "Deleted VLUN successfully.", {})
         vlun.main()
         # AnsibleModule.exit_json should be called
@@ -215,14 +215,14 @@ class TestHpe3parVlun(unittest.TestCase):
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.AnsibleModule')
-    @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.unexport_volumeset_to_host')
-    def test_main_exit_unexport_volumeset_to_host(self, mock_unexport_volumeset_to_host, mock_module, mock_client):
+    @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.unexport_volumeset_from_host')
+    def test_main_exit_unexport_volumeset_from_host(self, mock_unexport_volumeset_from_host, mock_module, mock_client):
         """
         hpe3par vlun - success check
         """
         PARAMS_FOR_UNEXPORT = {'storage_system_ip': '192.168.0.1', 'storage_system_name': '3PAR',
                                'storage_system_username': 'USER', 'storage_system_password': 'PASS',
-                               'state': 'unexport_volumeset_to_host', 'volume_name': 'test_vol_name',
+                               'state': 'unexport_volumeset_from_host', 'volume_name': 'test_vol_name',
                                'volume_set_name': 'test_volset_name', 'lunid': 12, 'autolun': True,
                                'host_name': 'test_host_name', 'host_set_name': 'test_hostset_name',
                                'node_val': 3, 'slot': 2, 'card_port': 1}
@@ -230,7 +230,7 @@ class TestHpe3parVlun(unittest.TestCase):
         mock_module.params = PARAMS_FOR_UNEXPORT
         mock_module.return_value = mock_module
         instance = mock_module.return_value
-        mock_unexport_volumeset_to_host.return_value = (
+        mock_unexport_volumeset_from_host.return_value = (
             True, True, "Deleted VLUN successfully.", {})
         vlun.main()
         # AnsibleModule.exit_json should be called
@@ -267,14 +267,14 @@ class TestHpe3parVlun(unittest.TestCase):
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.AnsibleModule')
-    @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.unexport_volumeset_to_hostset')
-    def test_main_exit_unexport_volumeset_to_hostset(self, mock_unexport_volumeset_to_hostset, mock_module, mock_client):
+    @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.unexport_volumeset_from_hostset')
+    def test_main_exit_unexport_volumeset_from_hostset(self, mock_unexport_volumeset_from_hostset, mock_module, mock_client):
         """
         hpe3par vlun - success check
         """
         PARAMS_FOR_UNEXPORT = {'storage_system_ip': '192.168.0.1', 'storage_system_name': '3PAR',
                                'storage_system_username': 'USER', 'storage_system_password': 'PASS',
-                               'state': 'unexport_volumeset_to_hostset', 'volume_name': 'test_vol_name',
+                               'state': 'unexport_volumeset_from_hostset', 'volume_name': 'test_vol_name',
                                'volume_set_name': 'test_volset_name', 'lunid': 12, 'autolun': True,
                                'host_name': 'test_host_name', 'host_set_name': 'test_hostset_name',
                                'node_val': 3, 'slot': 2, 'card_port': 1}
@@ -282,7 +282,7 @@ class TestHpe3parVlun(unittest.TestCase):
         mock_module.params = PARAMS_FOR_UNEXPORT
         mock_module.return_value = mock_module
         instance = mock_module.return_value
-        mock_unexport_volumeset_to_hostset.return_value = (
+        mock_unexport_volumeset_from_hostset.return_value = (
             True, True, "Deleted VLUN successfully.", {})
         vlun.main()
         # AnsibleModule.exit_json should be called
@@ -396,13 +396,13 @@ class TestHpe3parVlun(unittest.TestCase):
         self.assertEqual(
             result, (True, True, "Created VLUN successfully.", {}))
 
-# unexport volume to host
+# unexport volume from host
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volume_to_host_with_port_empty(self, mock_client):
+    def test_unexport_volume_from_host_with_port_empty(self, mock_client):
         """
-        hpe3par vlun - unexport volume to host
+        hpe3par vlun - unexport volume from host
         """
-        result = vlun.unexport_volume_to_host(
+        result = vlun.unexport_volume_from_host(
             mock_client, "user", "password", "test_volume_name", None, None, 2, 3, None)
 
         self.assertEqual(result, (
@@ -412,37 +412,37 @@ class TestHpe3parVlun(unittest.TestCase):
             {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volume_to_host_exception_in_login(self, mock_client):
+    def test_unexport_volume_from_host_exception_in_login(self, mock_client):
         """
-        hpe3par vlun - unexport volume to host
+        hpe3par vlun - unexport volume from host
         """
         mock_client.HPE3ParClient.login.side_effect = Exception(
             "Failed to login!")
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volume_to_host(
+        result = vlun.unexport_volume_from_host(
             mock_client.HPE3ParClient, "user", "password", "test_volume_name", 1, "test_hostname", 2, 3, 1)
         self.assertEqual(
             result, (False, False, "VLUN deletion failed | Failed to login!", {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volume_to_host_with_nonexistent_vlun(self, mock_client):
+    def test_unexport_volume_from_host_with_nonexistent_vlun(self, mock_client):
         """
-        hpe3par vlun - unexport volume to host
+        hpe3par vlun - unexport volume from host
         """
         mock_client.HPE3ParClient.vlunExists.return_value = False
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volume_to_host(
+        result = vlun.unexport_volume_from_host(
             mock_client.HPE3ParClient, "user", "password", "test_volume_name", 1, "test_hostname", 2, 3, 1)
         self.assertEqual(result, (True, False, "VLUN does not exist", {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volume_to_host_sucess_(self, mock_client):
+    def test_unexport_volume_from_host_sucess_(self, mock_client):
         """
-        hpe3par vlun - unexport volume to host
+        hpe3par vlun - unexport volume from host
         """
         mock_client.HPE3ParClient.vlunExists.return_value = True
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volume_to_host(
+        result = vlun.unexport_volume_from_host(
             mock_client.HPE3ParClient, "user", "password", "test_volume_name", 1, "test_hostname", 2, 3, 1)
         self.assertEqual(
             result, (True, True, "Deleted VLUN successfully.", {}))
@@ -512,13 +512,13 @@ class TestHpe3parVlun(unittest.TestCase):
         self.assertEqual(
             result, (True, True, "Created VLUN successfully.", {}))
 
-# unexport volume to hostset
+# unexport volume from hostset
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volume_to_hostset_with_port_empty(self, mock_client):
+    def test_unexport_volume_from_hostset_with_port_empty(self, mock_client):
         """
-        hpe3par vlun - unexport volume to hostset
+        hpe3par vlun - unexport volume from hostset
         """
-        result = vlun.unexport_volume_to_hostset(
+        result = vlun.unexport_volume_from_hostset(
             mock_client, "user", "password", "test_volume_name", 1, None, 2, 3, None)
 
         self.assertEqual(result, (
@@ -528,11 +528,11 @@ class TestHpe3parVlun(unittest.TestCase):
             {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volume_to_hostset_empty(self, mock_client):
+    def test_unexport_volume_from_hostset_empty(self, mock_client):
         """
-        hpe3par vlun - unexport volume to hostset
+        hpe3par vlun - unexport volume from hostset
         """
-        result = vlun.unexport_volume_to_hostset(
+        result = vlun.unexport_volume_from_hostset(
             mock_client, "user", "password", "test_volume_name", 1, None, 2, 3, 1)
 
         self.assertEqual(result, (
@@ -544,35 +544,35 @@ class TestHpe3parVlun(unittest.TestCase):
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
     def test_unexport_volume_to_hostset_exception_in_login(self, mock_client):
         """
-        hpe3par vlun - unexport volume to hostset
+        hpe3par vlun - unexport volume from hostset
         """
         mock_client.HPE3ParClient.login.side_effect = Exception(
             "Failed to login!")
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volume_to_hostset(
+        result = vlun.unexport_volume_from_hostset(
             mock_client.HPE3ParClient, "user", "password", "test_volume_name", 1, "test_hostsetname", 2, 3, 1)
         self.assertEqual(
             result, (False, False, "VLUN deletion failed | Failed to login!", {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volume_to_hostset_with_nonexistent_vlun(self, mock_client):
+    def test_unexport_volume_from_hostset_with_nonexistent_vlun(self, mock_client):
         """
-        hpe3par vlun - unexport volume to host
+        hpe3par vlun - unexport volume from host
         """
         mock_client.HPE3ParClient.vlunExists.return_value = False
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volume_to_hostset(
+        result = vlun.unexport_volume_from_hostset(
             mock_client.HPE3ParClient, "user", "password", "test_volume_name", 1, "test_hostsetname", 2, 3, 1)
         self.assertEqual(result, (True, False, "VLUN does not exist", {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volume_to_hostset_sucess(self, mock_client):
+    def test_unexport_volume_from_hostset_sucess(self, mock_client):
         """
-        hpe3par vlun - unexport volume to hostset
+        hpe3par vlun - unexport volume from hostset
         """
         mock_client.HPE3ParClient.vlunExists.return_value = True
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volume_to_hostset(
+        result = vlun.unexport_volume_from_hostset(
             mock_client.HPE3ParClient, "user", "password", "test_volume_name", 1, "test_hostsetname", 2, 3, 1)
         self.assertEqual(
             result, (True, True, "Deleted VLUN successfully.", {}))
@@ -656,13 +656,13 @@ class TestHpe3parVlun(unittest.TestCase):
         self.assertEqual(
             result, (True, True, "Created VLUN successfully.", {}))
 
-# unexport volumeset to host
+# unexport volumeset from host
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volumeset_to_host_with_port_empty(self, mock_client):
+    def test_unexport_volumeset_from_host_with_port_empty(self, mock_client):
         """
-        hpe3par vlun - unexport volumeset to host
+        hpe3par vlun - unexport volumeset from host
         """
-        result = vlun.unexport_volumeset_to_host(
+        result = vlun.unexport_volumeset_from_host(
             mock_client, "user", "password", "test_volumeset_name", 1, None, 2, 3, None)
 
         self.assertEqual(result, (
@@ -672,11 +672,11 @@ class TestHpe3parVlun(unittest.TestCase):
             {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volumeset_to_host_empty(self, mock_client):
+    def test_unexport_volumeset_from_host_empty(self, mock_client):
         """
-        hpe3par vlun - unexport volumeset to host
+        hpe3par vlun - unexport volumeset from host
         """
-        result = vlun.unexport_volumeset_to_host(
+        result = vlun.unexport_volumeset_from_host(
             mock_client, "user", "password", None, 1, 'host_name', None, 2, 3)
 
         self.assertEqual(result, (
@@ -693,7 +693,7 @@ class TestHpe3parVlun(unittest.TestCase):
         mock_client.HPE3ParClient.login.side_effect = Exception(
             "Failed to login!")
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volumeset_to_host(
+        result = vlun.unexport_volumeset_from_host(
             mock_client.HPE3ParClient, "user", "password", "test_volumeset_name", 1, "test_hostsetname", 2, 3, 1)
         self.assertEqual(
             result, (False, False, "VLUN deletion failed | Failed to login!", {}))
@@ -701,22 +701,22 @@ class TestHpe3parVlun(unittest.TestCase):
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
     def test_unexport_volumeset_to_host_with_nonexistent_vlun(self, mock_client):
         """
-        hpe3par vlun - unexport volumeset to host
+        hpe3par vlun - unexport volumeset from host
         """
         mock_client.HPE3ParClient.vlunExists.return_value = False
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volumeset_to_host(
+        result = vlun.unexport_volumeset_from_host(
             mock_client.HPE3ParClient, "user", "password", "test_volumeset_name", 1, "test_hostname", 2, 3, 1)
         self.assertEqual(result, (True, False, "VLUN does not exist", {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volumeset_to_host_sucess(self, mock_client):
+    def test_unexport_volumeset_from_host_sucess(self, mock_client):
         """
-        hpe3par vlun - unexport volumeset to host
+        hpe3par vlun - unexport volumeset from host
         """
         mock_client.HPE3ParClient.vlunExists.return_value = True
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volumeset_to_host(
+        result = vlun.unexport_volumeset_from_host(
             mock_client.HPE3ParClient, "user", "password", "test_volumeset_name", 1, "test_hostname", 2, 3, 1)
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
@@ -782,14 +782,14 @@ class TestHpe3parVlun(unittest.TestCase):
             mock_client.HPE3ParClient, "user", "password", "test_volume_name", 1, "test_hostsetname", 2, 3, 1, True)
         self.assertEqual(
             result, (True, True, "Created VLUN successfully.", {}))
-# unexport volumeset to hostset
+# unexport volumeset from hostset
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volumeset_to_hostset_with_port_empty(self, mock_client):
+    def test_unexport_volumeset_from_hostset_with_port_empty(self, mock_client):
         """
-        hpe3par vlun - unexport volumeset to host
+        hpe3par vlun - unexport volumeset from host
         """
-        result = vlun.unexport_volumeset_to_hostset(
+        result = vlun.unexport_volumeset_from_hostset(
             mock_client, "user", "password", "test_volumeset_name", 1, None, 2, 3, None)
 
         self.assertEqual(result, (
@@ -798,11 +798,11 @@ class TestHpe3parVlun(unittest.TestCase):
             'Node, Slot and Port or host set name need to be specified to unexport a vlun', {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volumeset_to_hostset_with_empty_volumeset_and_hostset(self, mock_client):
+    def test_unexport_volumeset_from_hostset_with_empty_volumeset_and_hostset(self, mock_client):
         """
-        hpe3par vlun - unexport volumeset to hostset
+        hpe3par vlun - unexport volumeset from hostset
         """
-        result = vlun.unexport_volumeset_to_hostset(
+        result = vlun.unexport_volumeset_from_hostset(
             mock_client, "user", "password", None, 1, None, 2, 3, 2)
 
         self.assertEqual(result, (
@@ -817,7 +817,7 @@ class TestHpe3parVlun(unittest.TestCase):
         """
         mock_client.login.side_effect = Exception("Failed to login!")
         mock_client.return_value = mock_client
-        result = vlun.unexport_volumeset_to_hostset(
+        result = vlun.unexport_volumeset_from_hostset(
             mock_client, "user", "password", "test_volumeset_name", 1, "test_hostsetsetname", 2, 3, 1)
         self.assertEqual(
             result, (False, False, "VLUN deletion failed | Failed to login!", {}))
@@ -825,22 +825,22 @@ class TestHpe3parVlun(unittest.TestCase):
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
     def test_unexport_volumeset_to_hostset_with_nonexistent_vlun(self, mock_client):
         """
-        hpe3par vlun - unexport volumeset to hostset
+        hpe3par vlun - unexport volumeset from hostset
         """
         mock_client.HPE3ParClient.vlunExists.return_value = False
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volumeset_to_hostset(
+        result = vlun.unexport_volumeset_from_hostset(
             mock_client.HPE3ParClient, "user", "password", "test_volumeset_name", 1, "test_hostsetname", 2, 3, 1)
         self.assertEqual(result, (True, False, "VLUN does not exist", {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
-    def test_unexport_volumeset_to_hostset_sucess(self, mock_client):
+    def test_unexport_volumeset_from_hostset_sucess(self, mock_client):
         """
-        hpe3par vlun - unexport volumeset to hostset
+        hpe3par vlun - unexport volumeset from hostset
         """
         mock_client.HPE3ParClient.vlunExists.return_value = True
         mock_client.HPE3ParClient.return_value = mock_client
-        result = vlun.unexport_volumeset_to_hostset(
+        result = vlun.unexport_volumeset_from_hostset(
             mock_client.HPE3ParClient, "user", "password", "test_volumeset_name", 1, "test_hostsetname", 2, 3, 1)
 
 
