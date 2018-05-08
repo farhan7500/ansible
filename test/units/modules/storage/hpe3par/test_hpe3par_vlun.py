@@ -433,7 +433,7 @@ class TestHpe3parVlun(unittest.TestCase):
         mock_client.HPE3ParClient.return_value = mock_client
         result = vlun.unexport_volume_from_host(
             mock_client.HPE3ParClient, "user", "password", "test_volume_name", 1, "test_hostname", 2, 3, 1)
-        self.assertEqual(result, (True, False, "VLUN does not exist", {}))
+        self.assertEqual(result, (False, False, "VLUN does not exist", {}))
 
     @mock.patch('ansible.modules.storage.hpe.hpe3par_vlun.client')
     def test_unexport_volume_from_host_sucess_(self, mock_client):
