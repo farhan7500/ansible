@@ -197,11 +197,9 @@ specified to create a vlun',
 
         if node_val is not None and slot is not None and card_port is not None:
             port_pos = {'node': node_val, 'slot': slot, 'cardPort': card_port}
-        if not client_obj.vlunExists(
-                volume_name,
-                lunid,
-                host_name,
-                port_pos):
+
+        if (not autolun and not client_obj.vlunExists(
+                volume_name, lunid, host_name, port_pos)) or autolun:
             client_obj.createVLUN(
                 volume_name,
                 lunid,
