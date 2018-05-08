@@ -32,8 +32,8 @@ DOCUMENTATION = r'''
 author: "Farhan Nomani (nomani@hpe.com)"
 description: "On HPE 3PAR - Export volume to host. - Export volumeset to host.
  - Export volume to hostset. - Export volumeset to hostset. - Unexport volume
- to host. - Unexport volumeset to host. - Unexport volume to hostset. -
- Unexport volumeset to hostset."
+ from host. - Unexport volumeset from host. - Unexport volume from hostset. -
+ Unexport volumeset from hostset."
 module: hpe3par_vlun
 options:
   autolun:
@@ -54,8 +54,8 @@ options:
     description:
       - "Name of the host set to which the volume or VV set is to be exported.
        \nRequired with action export_volume_to_hostset,
-       unexport_volume_to_hostset, export_volumeset_to_hostset,
-       unexport_volumeset_to_hostset\n"
+       unexport_volume_from_hostset, export_volumeset_to_hostset,
+       unexport_volumeset_from_hostset\n"
     required: false
   lunid:
     description:
@@ -233,18 +233,26 @@ def unexport_volume_from_host(
         client_obj.login(storage_system_username, storage_system_password)
         port_pos = None
 
-        if host_name is None and (
-                node_val is None or slot is None or card_port is None):
-            return (
-                False,
-                False,
-                'Node, Slot and Port or host name need to be specified to \
-unexport a vlun',
-                {})
-        if client_obj.vlunExists(volume_name, lunid, host_name, port_pos):
-            client_obj.deleteVLUN(volume_name, lunid, host_name, port_pos)
+        if volume_name is not None and volume_name:
+            if (host_name is not None and host_name) or (node_val is not None and slot is not None and card_port is not None):
+                if (node_val is not None and slot is not None and card_port is not None):
+                    port_pos = {
+                        'node': node_val,
+                        'slot': slot,
+                        'cardPort': card_port
+                    }
+                if lunid is not None:
+                    if client_obj.vlunExists(volume_name, lunid, host_name, port_pos):
+                        client_obj.deleteVLUN(
+                            volume_name, lunid, host_name, port_pos)
+                    else:
+                        return (False, False, "VLUN does not exist", {})
+                else:
+                    return (False, False, "Lun ID is required", {})
+            else:
+                return (False, False, 'Node, Slot and Port or host name need to be specified to unexport a vlun', {})
         else:
-            return (True, False, "VLUN does not exist", {})
+            return (False, False, "Volume name is required", {})
     except Exception as e:
         return (False, False, "VLUN deletion failed | %s" % e, {})
     finally:
@@ -448,6 +456,8 @@ unexport a vlun',
             volume_set_name = 'set:' + volume_set_name
 
         port_pos = None
+        if node_val is not None and slot is not None and card_port is not None:
+            port_pos = {'node': node_val, 'slot': slot, 'cardPort': card_port}
 
         if client_obj.vlunExists(volume_set_name, lunid, host_name, port_pos):
             client_obj.deleteVLUN(volume_set_name, lunid, host_name, port_pos)
