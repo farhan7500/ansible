@@ -198,8 +198,7 @@ specified to create a vlun',
         if node_val is not None and slot is not None and card_port is not None:
             port_pos = {'node': node_val, 'slot': slot, 'cardPort': card_port}
 
-        if (not autolun and not client_obj.vlunExists(
-                volume_name, lunid, host_name, port_pos)) or autolun:
+        if autolun:
             client_obj.createVLUN(
                 volume_name,
                 lunid,
@@ -209,7 +208,21 @@ specified to create a vlun',
                 None,
                 autolun)
         else:
-            return (True, False, "VLUN already present", {})
+            if lunid:
+                if not client_obj.vlunExists(
+                        volume_name, lunid, host_name, port_pos):
+                    client_obj.createVLUN(
+                        volume_name,
+                        lunid,
+                        host_name,
+                        port_pos,
+                        None,
+                        None,
+                        autolun)
+                else:
+                    return (True, False, "VLUN already present", {})
+            else:
+                return (False, False, "Lun ID is required", {})
     except Exception as e:
         return (False, False, "VLUN creation failed | %s" % e, {})
     finally:
@@ -292,8 +305,7 @@ def export_volume_to_hostset(
         if node_val is not None and slot is not None and card_port is not None:
             port_pos = {'node': node_val, 'slot': slot, 'cardPort': card_port}
 
-        if (not autolun and not client_obj.vlunExists(
-                volume_name, lunid, host_set_name, port_pos)) or autolun:
+        if autolun:
             client_obj.createVLUN(
                 volume_name,
                 lunid,
@@ -303,7 +315,21 @@ def export_volume_to_hostset(
                 None,
                 autolun)
         else:
-            return (True, False, "VLUN already present", {})
+            if lunid:
+                if not client_obj.vlunExists(
+                        volume_name, lunid, host_set_name, port_pos):
+                    client_obj.createVLUN(
+                        volume_name,
+                        lunid,
+                        host_set_name,
+                        port_pos,
+                        None,
+                        None,
+                        autolun)
+                else:
+                    return (True, False, "VLUN already present", {})
+            else:
+                return (False, False, "Lun ID is required", {})
 
     except Exception as e:
         return (False, False, "VLUN creation failed | %s" % e, {})
@@ -344,11 +370,14 @@ unexport a vlun',
             host_set_name = 'set:' + host_set_name
 
         port_pos = None
-
-        if client_obj.vlunExists(volume_name, lunid, host_set_name, port_pos):
-            client_obj.deleteVLUN(volume_name, lunid, host_set_name, port_pos)
+        if lunid is not None:
+            if client_obj.vlunExists(volume_name, lunid, host_set_name, port_pos):
+                client_obj.deleteVLUN(volume_name, lunid,
+                                      host_set_name, port_pos)
+            else:
+                return (False, False, "VLUN does not exist", {})
         else:
-            return (True, False, "VLUN does not exist", {})
+            return (False, False, "Lun ID is required", {})
     except Exception as e:
         return (False, False, "VLUN deletion failed | %s" % e, {})
     finally:
@@ -402,8 +431,7 @@ create a vlun',
         if node_val is not None and slot is not None and card_port is not None:
             port_pos = {'node': node_val, 'slot': slot, 'cardPort': card_port}
 
-        if (not autolun and not client_obj.vlunExists(
-                volume_set_name, lunid, host_name, port_pos)) or autolun:
+        if autolun:
             client_obj.createVLUN(
                 volume_set_name,
                 lunid,
@@ -413,8 +441,21 @@ create a vlun',
                 None,
                 autolun)
         else:
-            return (True, False, "VLUN already present", {})
-
+            if lunid:
+                if not client_obj.vlunExists(
+                        volume_set_name, lunid, host_name, port_pos):
+                    client_obj.createVLUN(
+                        volume_set_name,
+                        lunid,
+                        host_name,
+                        port_pos,
+                        None,
+                        None,
+                        autolun)
+                else:
+                    return (True, False, "VLUN already present", {})
+            else:
+                return (False, False, "Lun ID is required", {})
     except Exception as e:
         return (False, False, "VLUN creation failed | %s" % e, {})
     finally:
@@ -456,11 +497,14 @@ unexport a vlun',
         port_pos = None
         if node_val is not None and slot is not None and card_port is not None:
             port_pos = {'node': node_val, 'slot': slot, 'cardPort': card_port}
-
-        if client_obj.vlunExists(volume_set_name, lunid, host_name, port_pos):
-            client_obj.deleteVLUN(volume_set_name, lunid, host_name, port_pos)
+        if lunid is not None:
+            if client_obj.vlunExists(volume_set_name, lunid, host_name, port_pos):
+                client_obj.deleteVLUN(
+                    volume_set_name, lunid, host_name, port_pos)
+            else:
+                return (True, False, "VLUN does not exist", {})
         else:
-            return (True, False, "VLUN does not exist", {})
+            return (False, False, "Lun ID is required", {})
     except Exception as e:
         return (False, False, "VLUN deletion failed | %s" % e, {})
     finally:
@@ -511,8 +555,7 @@ export a vlun',
         if node_val is not None and slot is not None and card_port is not None:
             port_pos = {'node': node_val, 'slot': slot, 'cardPort': card_port}
 
-        if (not autolun and not client_obj.vlunExists(
-                volume_set_name, lunid, host_set_name, port_pos)) or autolun:
+        if autolun:
             client_obj.createVLUN(
                 volume_set_name,
                 lunid,
@@ -522,8 +565,21 @@ export a vlun',
                 None,
                 autolun)
         else:
-            return (True, False, "VLUN already present", {})
-
+            if lunid:
+                if not client_obj.vlunExists(
+                        volume_set_name, lunid, host_set_name, port_pos):
+                    client_obj.createVLUN(
+                        volume_set_name,
+                        lunid,
+                        host_set_name,
+                        port_pos,
+                        None,
+                        None,
+                        autolun)
+                else:
+                    return (True, False, "VLUN already present", {})
+            else:
+                return (False, False, "Lun ID is required", {})
     except Exception as e:
         return (False, False, "VLUN creation failed | %s" % e, {})
     finally:
@@ -566,15 +622,18 @@ unexport a vlun',
 
         port_pos = None
 
-        if client_obj.vlunExists(
-                volume_set_name,
-                lunid,
-                host_set_name,
-                port_pos):
-            client_obj.deleteVLUN(
-                volume_set_name, lunid, host_set_name, port_pos)
+        if lunid is not None:
+            if client_obj.vlunExists(
+                    volume_set_name,
+                    lunid,
+                    host_set_name,
+                    port_pos):
+                client_obj.deleteVLUN(
+                    volume_set_name, lunid, host_set_name, port_pos)
+            else:
+                return (True, False, "VLUN does not exist", {})
         else:
-            return (True, False, "VLUN does not exist", {})
+            return (False, False, "Lun ID is required", {})
     except Exception as e:
         return (False, False, "VLUN deletion failed | %s" % e, {})
     finally:
