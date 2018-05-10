@@ -29,7 +29,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = r'''
 ---
-author: "Farhan Nomani (nomani@hpe.com)"
+author: "Hewlett Packard Enterprise (ecostor@groups.ext.hpe.com)"
 description:
   - "Create and delete CPG on HPE 3PAR."
 module: hpe3par_cpg
