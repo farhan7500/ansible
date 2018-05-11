@@ -33,10 +33,6 @@ options:
       description:
         - "The storage system user name."
       required: true
-    storage_system_port:
-      description:
-        - "The storage system port."
-      required: true
 
 requirements:
   - "3PAR OS - 3.2.2 MU6, 3.3.1 MU1"

@@ -34,7 +34,7 @@ author:
   - Farhan Nomani (@farhan7500)
   - Gautham P Hegde (@gautamphegde)
 description:
-  - Create and delete CPG on HPE 3PAR. See U(https://www.ansible.com/tower) for an overview.
+  - Create and delete CPG on HPE 3PAR.
 module: hpe3par_cpg
 options:
   cpg_name:
@@ -125,30 +125,30 @@ version_added: 2.6
 EXAMPLES = r'''
     - name: Create CPG sample_cpg
       hpe3par_cpg:
-        storage_system_ip=10.10.10.1
-        storage_system_username=username
-        storage_system_password=password
-        state=present
-        cpg_name=sample_cpg
-        domain=sample_domain
-        growth_increment=32000
-        growth_increment_unit=MiB
-        growth_limit=64000
-        growth_limit_unit=MiB
-        growth_warning=48000
-        growth_warning_unit=MiB
-        raid_type=R6
-        set_size=8
-        high_availability=MAG
-        disk_type=FC
+        storage_system_ip: 10.10.10.1
+        storage_system_username: username
+        storage_system_password: password
+        state: present
+        cpg_name: sample_cpg
+        domain: sample_domain
+        growth_increment: 32000
+        growth_increment_unit: MiB
+        growth_limit: 64000
+        growth_limit_unit: MiB
+        growth_warning: 48000
+        growth_warning_unit: MiB
+        raid_type: R6
+        set_size: 8
+        high_availability: MAG
+        disk_type: FC
 
     - name: Delete CPG sample_cpg
       hpe3par_cpg:
-        storage_system_ip=10.10.10.1
-        storage_system_username=username
-        storage_system_password=password
-        state=absent
-        cpg_name="{{ cpg_name }}"
+        storage_system_ip: 10.10.10.1
+        storage_system_username: username
+        storage_system_password: password
+        state: absent
+        cpg_name: sample_cpg
 '''
 
 RETURN = r'''
@@ -273,7 +273,6 @@ def main():
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
     storage_system_password = module.params["storage_system_password"]
-    storage_system_port = module.params["storage_system_port"]
     cpg_name = module.params["cpg_name"]
     domain = module.params["domain"]
     growth_increment = module.params["growth_increment"]
@@ -287,14 +286,13 @@ def main():
     high_availability = module.params["high_availability"]
     disk_type = module.params["disk_type"]
 
-    wsapi_url = 'https://%s:%s/api/v1' % (storage_system_ip, storage_system_port)
+    wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
     #TODO -> Review comment asks to change secure to True
     client_obj = client.HPE3ParClient(wsapi_url, secure=False)
 
     # States
     if module.params["state"] == "present":
         try:
-            do_logout = True
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = create_cpg(
                 client_obj,
@@ -311,37 +309,22 @@ def main():
                 high_availability,
                 disk_type
             )
-        except exceptions.HTTPForbidden as e:
-            do_logout = False
-            module.fail_json(msg="CPG create failed | %s" % e)
-        except exceptions.HTTPUnauthorized as e:
-            do_logout = False
-            module.fail_json(msg="CPG create failed | %s" % e)
         except Exception as e:
             module.fail_json(msg="CPG create failed | %s" % e)
         finally:
-            if do_logout:
-                client_obj.logout()
+            client_obj.logout()
 
     elif module.params["state"] == "absent":
         try:
-            do_logout = True
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = delete_cpg(
                 client_obj,
                 cpg_name
             )
-        except exceptions.HTTPForbidden as e:
-            do_logout = False
-            module.fail_json(msg="CPG create failed | %s" % e)
-        except exceptions.HTTPUnauthorized as e:
-            do_logout = False
-            module.fail_json(msg="CPG create failed | %s" % e)
-        except exceptions.ClientException as e:
+        except Exception as e:
             module.fail_json(msg="CPG create failed | %s" % e)
         finally:
-            if do_logout:
-                client_obj.logout()
+            client_obj.logout()
 
     if return_status:
         module.exit_json(changed=changed, msg=msg)
