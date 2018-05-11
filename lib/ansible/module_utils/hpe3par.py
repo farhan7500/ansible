@@ -9,10 +9,6 @@ def cpg_argument_spec():
             "required": True,
             "type": "str"
         },
-        "storage_system_port": {
-            "required": True,
-            "type": "str"
-        },
         "storage_system_username": {
             "required": True,
             "type": "str",
