@@ -155,7 +155,7 @@ RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils import hpe3par
+from ansible.module_utils import hpe3par, basic
 try:
     from hpe3par_sdk import client
     from hpe3parclient import exceptions
@@ -166,14 +166,15 @@ except ImportError:
 
 
 def convert_to_binary_multiple(size, size_unit):
-    size_mib = 0
     if size_unit == 'GiB':
-        size_mib = size * 1024
-    elif size_unit == 'TiB':
-        size_mib = size * 1048576
-    elif size_unit == 'MiB':
-        size_mib = size
-    return int(size_mib)
+        suffix = 'G'
+    if size_unit == 'MiB':
+        suffix = 'M'
+    if size_unit == 'TiB':
+        suffix = 'T'
+
+    size_kib = basic.human_to_bytes(str(size) + suffix)
+    return int(size_kib / (1024 * 1024))
 
 
 def validate_set_size(raid_type, set_size):
