@@ -36,7 +36,7 @@ options:
 
 requirements:
   - "3PAR OS - 3.2.2 MU6, 3.3.1 MU1"
-  - "Ansible - 2.4"
+  - "Ansible - 2.6"
   - "hpe3par_sdk 1.0.0"
   - "WSAPI service should be enabled on the 3PAR storage array."
     '''

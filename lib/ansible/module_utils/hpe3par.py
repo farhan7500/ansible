@@ -1,23 +1,30 @@
+storage_system_spec = {
+    "storage_system_ip": {
+        "required": True,
+        "type": "str"
+    },
+    "storage_system_username": {
+        "required": True,
+        "type": "str",
+        "no_log": True
+    },
+    "storage_system_password": {
+        "required": True,
+        "type": "str",
+        "no_log": True
+    },
+    "secure": {
+        "type": "bool",
+        "default": False 
+    }
+}
+
 def cpg_argument_spec():
-    return {
+    cpg_spec = {
         "state": {
             "required": True,
             "choices": ['present', 'absent'],
             "type": 'str'
-        },
-        "storage_system_ip": {
-            "required": True,
-            "type": "str"
-        },
-        "storage_system_username": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "storage_system_password": {
-            "required": True,
-            "type": "str",
-            "no_log": True
         },
         "cpg_name": {
             "required": True,
@@ -56,7 +63,7 @@ def cpg_argument_spec():
         "raid_type": {
             "required": False,
             "type": "str",
-            "choices": ['R0', 'R1', 'R5', 'R6'],
+            "choices": ['R0', 'R1', 'R5', 'R6']
         },
         "set_size": {
             "required": False,
@@ -65,10 +72,14 @@ def cpg_argument_spec():
         },
         "high_availability": {
             "type": "str",
-            "choices": ['PORT', 'CAGE', 'MAG'],
+            "choices": ['PORT', 'CAGE', 'MAG']
         },
         "disk_type": {
             "type": "str",
-            "choices": ['FC', 'NL', 'SSD'],
-        }
+            "choices": ['FC', 'NL', 'SSD']
+        },
+
     }
+    cpg_spec.update(storage_system_spec)
+    return cpg_spec
+
