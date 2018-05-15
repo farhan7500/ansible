@@ -117,6 +117,11 @@ options:
     description:
       - Whether the specified CPG should exist or not.
     required: true
+  secure:
+    description:
+      - Specifies whether cerificate need to be installed while communicating
+    type: bool
+    default: false
 extends_documentation_fragment: hpe3par
 version_added: 2.6
 '''
@@ -262,8 +267,7 @@ def delete_cpg(
 
 def main():
 
-    fields = hpe3par.cpg_argument_spec()
-    module = AnsibleModule(argument_spec=fields)
+    module = AnsibleModule(argument_spec=hpe3par.cpg_argument_spec())
 
     if not HAS_3PARCLIENT:
         module.fail_json(msg='the python hpe3par_sdk module is required')
@@ -286,10 +290,10 @@ def main():
     set_size = module.params["set_size"]
     high_availability = module.params["high_availability"]
     disk_type = module.params["disk_type"]
+    secure = module.params["secure"]
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
-    #TODO -> Review comment asks to change secure to True
-    client_obj = client.HPE3ParClient(wsapi_url, secure=False)
+    client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     # States
     if module.params["state"] == "present":
