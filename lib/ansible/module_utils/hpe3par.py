@@ -20,7 +20,7 @@ storage_system_spec = {
 }
 
 def cpg_argument_spec():
-    cpg_spec = {
+    spec = {
         "state": {
             "required": True,
             "choices": ['present', 'absent'],
@@ -77,9 +77,8 @@ def cpg_argument_spec():
         "disk_type": {
             "type": "str",
             "choices": ['FC', 'NL', 'SSD']
-        },
-
+        }
     }
-    cpg_spec.update(storage_system_spec)
-    return cpg_spec
+    spec.update(storage_system_spec)
+    return spec
 

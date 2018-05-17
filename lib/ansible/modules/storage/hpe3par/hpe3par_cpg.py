@@ -146,6 +146,7 @@ EXAMPLES = r'''
         set_size: 8
         high_availability: MAG
         disk_type: FC
+        secure: False
 
     - name: Delete CPG sample_cpg
       hpe3par_cpg:
@@ -154,6 +155,7 @@ EXAMPLES = r'''
         storage_system_password: password
         state: absent
         cpg_name: sample_cpg
+        secure: False
 '''
 
 RETURN = r'''
