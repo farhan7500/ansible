@@ -30,7 +30,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = r'''
 ---
 short_description: Manage HPE 3PAR CPG
-author: 
+author:
   - Farhan Nomani (@farhan7500)
   - Gautham P Hegde (@gautamphegde)
 description:
@@ -270,7 +270,6 @@ def main():
 
     module = AnsibleModule(argument_spec=hpe3par.cpg_argument_spec())
     if not HAS_3PARCLIENT:
-        #TODO: Add URL for library
         module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     if len(module.params["cpg_name"]) < 1 or len(module.params["cpg_name"]) > 31:
@@ -295,7 +294,6 @@ def main():
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
     client_obj = client.HPE3ParClient(wsapi_url, secure)
-
 
     # States
     if module.params["state"] == "present":
