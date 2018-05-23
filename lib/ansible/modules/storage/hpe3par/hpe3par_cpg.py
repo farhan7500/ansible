@@ -168,7 +168,6 @@ try:
     from hpe3parclient import exceptions
     HAS_3PARCLIENT = True
 except ImportError:
-    client = None
     HAS_3PARCLIENT = False
 
 
@@ -270,9 +269,9 @@ def delete_cpg(
 def main():
 
     module = AnsibleModule(argument_spec=hpe3par.cpg_argument_spec())
-
     if not HAS_3PARCLIENT:
-        module.fail_json(msg='the python hpe3par_sdk module is required')
+        #TODO: Add URL for library
+        module.fail_json(msg='the python hpe3par_sdk library is required')
 
     if len(module.params["cpg_name"]) < 1 or len(module.params["cpg_name"]) > 31:
         module.fail_json(msg="CPG name must be atleast 1 character and not more than 31 characters")
@@ -296,6 +295,7 @@ def main():
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
     client_obj = client.HPE3ParClient(wsapi_url, secure)
+
 
     # States
     if module.params["state"] == "present":
