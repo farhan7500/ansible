@@ -26,9 +26,7 @@ sys.modules['hpe3parclient'] = mock.Mock()
 sys.modules['hpe3parclient.exceptions'] = mock.Mock()
 from ansible.modules.storage.hpe3par import hpe3par_cpg
 from ansible.module_utils.basic import AnsibleModule
-
-fields = {'storage_system_password': {'no_log': True, 'required': True, 'type': 'str'}, 'domain': {'type': 'str'}, 'secure': {'default': False, 'type': 'bool'}, 'cpg_name': {'required': True, 'type': 'str'}, 'raid_type': {'required': False, 'type': 'str', 'choices': ['R0', 'R1', 'R5', 'R6']}, 'growth_warning_unit': {'default': 'GiB', 'type': 'str', 'choices': ['TiB', 'GiB', 'MiB']}, 'set_size': {'default': -1, 'required': False, 'type': 'int'}, 'storage_system_ip': {'required': True, 'type': 'str'}, 'disk_type': {'type': 'str', 'choices': ['FC', 'NL', 'SSD']}, 'growth_limit': {'default': -1.0, 'type': 'float'}, 'high_availability': {'type': 'str', 'choices': ['PORT', 'CAGE', 'MAG']}, 'growth_increment_unit': {'default': 'GiB', 'type': 'str', 'choices': ['TiB', 'GiB', 'MiB']}, 'growth_increment': {'default': -1.0, 'type': 'float'}, 'state': {'required': True, 'type': 'str', 'choices': ['present', 'absent']}, 'growth_warning': {'default': -1.0, 'type': 'float'}, 'storage_system_username': {'no_log': True, 'required': True, 'type': 'str'}, 'growth_limit_unit': {'default': 'GiB', 'type': 'str', 'choices': ['TiB', 'GiB', 'MiB']}}
-
+from ansible.module_utils import hpe3par
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.AnsibleModule')
@@ -64,7 +62,7 @@ def test_module_args(mock_create_cpg, mock_module, mock_client):
     mock_create_cpg.return_value = (True, True, "Created CPG successfully.")
     hpe3par_cpg.main()
     mock_module.assert_called_with(
-        argument_spec=fields)
+        argument_spec=hpe3par.cpg_argument_spec())
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.AnsibleModule')
