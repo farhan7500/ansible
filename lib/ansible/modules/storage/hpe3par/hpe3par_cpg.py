@@ -271,7 +271,7 @@ def main():
     module = AnsibleModule(argument_spec=hpe3par.cpg_argument_spec())
     if not HAS_3PARCLIENT:
         #TODO: Add URL for library
-        module.fail_json(msg='the python hpe3par_sdk library is required')
+        module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     if len(module.params["cpg_name"]) < 1 or len(module.params["cpg_name"]) > 31:
         module.fail_json(msg="CPG name must be atleast 1 character and not more than 31 characters")
