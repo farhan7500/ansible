@@ -38,9 +38,9 @@ class Cliconf(CliconfBase):
         reply = self.get('show version')
         data = to_text(reply, errors='surrogate_or_strict').strip()
 
-        match = re.search(r'Version (\S+),', data)
+        match = re.search(r'Version (\S+)', data)
         if match:
-            device_info['network_os_version'] = match.group(1)
+            device_info['network_os_version'] = match.group(1).strip(',')
 
         match = re.search(r'^Cisco (.+) \(revision', data, re.M)
         if match:
@@ -72,6 +72,7 @@ class Cliconf(CliconfBase):
 
     @enable_mode
     def edit_config(self, command):
+        results = []
         for cmd in chain(['configure terminal'], to_list(command), ['end']):
             if isinstance(cmd, dict):
                 command = cmd['command']
@@ -84,7 +85,8 @@ class Cliconf(CliconfBase):
                 answer = None
                 newline = True
 
-            self.send_command(command, prompt, answer, False, newline)
+            results.append(self.send_command(command, prompt, answer, False, newline))
+        return results[1:-1]
 
     def get(self, command, prompt=None, answer=None, sendonly=False):
         return self.send_command(command, prompt=prompt, answer=answer, sendonly=sendonly)
