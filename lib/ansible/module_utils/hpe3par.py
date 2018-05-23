@@ -15,9 +15,10 @@ storage_system_spec = {
     },
     "secure": {
         "type": "bool",
-        "default": False 
+        "default": False
     }
 }
+
 
 def cpg_argument_spec():
     spec = {
@@ -81,4 +82,3 @@ def cpg_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
-
