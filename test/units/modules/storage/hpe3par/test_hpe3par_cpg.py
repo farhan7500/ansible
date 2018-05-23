@@ -28,6 +28,7 @@ from ansible.modules.storage.hpe3par import hpe3par_cpg
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils import hpe3par
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.create_cpg')
@@ -58,16 +59,17 @@ def test_module_args(mock_create_cpg, mock_module, mock_client):
 
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
-    mock_client.HPE3ParClient.login.return_value=True
+    mock_client.HPE3ParClient.login.return_value = True
     mock_create_cpg.return_value = (True, True, "Created CPG successfully.")
     hpe3par_cpg.main()
     mock_module.assert_called_with(
         argument_spec=hpe3par.cpg_argument_spec())
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.create_cpg')
-def test_main_exit_functionality_present_success_without_issue_attr_dict( mock_create_cpg, mock_module, mock_client):
+def test_main_exit_functionality_present_success_without_issue_attr_dict(mock_create_cpg, mock_module, mock_client):
     """
     hpe3par flash cache - success check
     """
@@ -95,7 +97,7 @@ def test_main_exit_functionality_present_success_without_issue_attr_dict( mock_c
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_client.HPE3ParClient.login.return_value=True
+    mock_client.HPE3ParClient.login.return_value = True
     mock_create_cpg.return_value = (
         True, True, "Created CPG successfully.")
     hpe3par_cpg.main()
@@ -104,6 +106,7 @@ def test_main_exit_functionality_present_success_without_issue_attr_dict( mock_c
         changed=True, msg="Created CPG successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.AnsibleModule')
@@ -146,10 +149,12 @@ def test_main_exit_functionality_absent_success_without_issue_attr_dict(mock_del
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
 
+
 def test_convert_to_binary_multiple():
     assert hpe3par_cpg.convert_to_binary_multiple(1, 'MiB') == 1
     assert hpe3par_cpg.convert_to_binary_multiple(1, 'GiB') == 1 * 1024
     assert hpe3par_cpg.convert_to_binary_multiple(1, 'TiB') == 1 * 1024 * 1024
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.client')
 def test_cpg_ldlayout_map(mock_client):
@@ -160,7 +165,9 @@ def test_cpg_ldlayout_map(mock_client):
                                           'R6': {'raid_value': 4, 'set_sizes': [6, 8, 10, 12, 16]}
                                           }
     ldlayout_dict = {'RAIDType': 'R6', 'HA': 'PORT'}
-    assert hpe3par_cpg.cpg_ldlayout_map(ldlayout_dict) == {'RAIDType': 4, 'HA': 1}
+    assert hpe3par_cpg.cpg_ldlayout_map(ldlayout_dict) == {
+        'RAIDType': 4, 'HA': 1}
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.client')
 def test_create_cpg(mock_client):
@@ -175,36 +182,37 @@ def test_create_cpg(mock_client):
     mock_client.HPE3ParClient.createCPG.return_value = True
 
     assert hpe3par_cpg.create_cpg(mock_client.HPE3ParClient,
-                                            'test_cpg',
-                                            'test_domain',
-                                            32768,
-                                            'MiB',
-                                            32768,
-                                            'MiB',
-                                            32768,
-                                            'MiB',
-                                            'R6',
-                                            8,
-                                            'MAG',
-                                            'FC'
-                                            ) == (True, True, "Created CPG %s successfully." % 'test_cpg')
+                                  'test_cpg',
+                                  'test_domain',
+                                  32768,
+                                  'MiB',
+                                  32768,
+                                  'MiB',
+                                  32768,
+                                  'MiB',
+                                  'R6',
+                                  8,
+                                  'MAG',
+                                  'FC'
+                                  ) == (True, True, "Created CPG %s successfully." % 'test_cpg')
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_cpg.client')
-def test_delete_cpg( mock_client):
+def test_delete_cpg(mock_client):
     mock_client.HPE3ParClient.login.return_value = True
     mock_client.HPE3ParClient.cpgExists.return_value = True
     mock_client.HPE3ParClient.FC = 1
     mock_client.HPE3ParClient.deleteCPG.return_value = True
 
     assert hpe3par_cpg.delete_cpg(mock_client.HPE3ParClient,
-                                            'test_cpg'
-                                            ) == (True, True, "Deleted CPG %s successfully." % 'test_cpg')
+                                  'test_cpg'
+                                  ) == (True, True, "Deleted CPG %s successfully." % 'test_cpg')
 
     mock_client.HPE3ParClient.cpgExists.return_value = False
 
     assert hpe3par_cpg.delete_cpg(mock_client.HPE3ParClient,
-                                            'test_cpg'
-                                            ) == (True, False, "CPG does not exist")
+                                  'test_cpg'
+                                  ) == (True, False, "CPG does not exist")
     assert hpe3par_cpg.delete_cpg(mock_client.HPE3ParClient,
-                                            None
-                                            ) == (True, False, "CPG does not exist")
+                                  None
+                                  ) == (True, False, "CPG does not exist")
