@@ -15,9 +15,10 @@ storage_system_spec = {
     },
     "secure": {
         "type": "bool",
-        "default": False 
+        "default": False
     }
 }
+
 
 def cpg_argument_spec():
     spec = {
@@ -82,3 +83,88 @@ def cpg_argument_spec():
     spec.update(storage_system_spec)
     return spec
 
+
+def flash_cache_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": ['present', 'absent'],
+            "type": 'str'
+        },
+        "size_in_gib": {
+            "type": "int"
+        },
+        "mode": {
+            "type": "int"
+        }
+    }
+    spec.update(storage_system_spec)
+    return spec
+    
+	
+def host_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": [
+                'present',
+                'absent',
+                'modify',
+                'add_initiator_chap',
+                'remove_initiator_chap',
+                'add_target_chap',
+                'remove_target_chap',
+                'add_fc_path_to_host',
+                'remove_fc_path_from_host',
+                'add_iscsi_path_to_host',
+                'remove_iscsi_path_from_host'
+			],
+            "type": 'str'
+		},
+        "host_name": {
+            "type": "str",
+			"reuqired": True
+		},
+        "host_domain": {
+            "type": "str"
+		},
+        "host_new_name": {
+            "type": "str"
+		},
+        "host_fc_wwns": {
+            "type": "list"
+		},
+        "host_iscsi_names": {
+            "type": "list"
+		},
+        "host_persona": {
+            "type": "str",
+            "choices": [
+                "GENERIC",
+                "GENERIC_ALUA",
+                "GENERIC_LEGACY",
+                "HPUX_LEGACY",
+                "AIX_LEGACY",
+                "EGENERA",
+                "ONTAP_LEGACY",
+                "VMWARE",
+                "OPENVMS",
+                "HPUX",
+                "WINDOWS_SERVER"
+			]
+		},
+        "force_path_removal": {
+            "type": "bool"
+		},
+        "chap_name": {
+            "type": "str"
+		},
+        "chap_secret": {
+            "type": "str"
+		},
+        "chap_secret_hex": {
+            "type": "bool"
+		}
+    }
+    spec.update(storage_system_spec)
+    return spec

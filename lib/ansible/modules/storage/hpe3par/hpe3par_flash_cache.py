@@ -29,46 +29,46 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = r'''
 ---
-author: "Farhan Nomani (nomani@hpe.com)"
-description: "On HPE 3PAR - Create Flash Cache
- - Delete Flash Cache."
+short_description: "Manage HPE 3PAR Flash Cache"
+author:
+  - Farhan Nomani (@farhan7500)
+  - Gautham P Hegde (@gautamphegde)
+description: Create and delete Flash Cache on HPE 3PAR.
 module: hpe3par_flash_cache
 options:
   size_in_gib:
     description:
-      - "Specifies the node pair size of the Flash Cache on
-the system."
+      - Specifies the node pair size of the Flash Cache on
+the system.
     required: true
   mode:
     description:
-      - "Simulator 1 Real 2 (default)"
-    required: false
+      - Simulator 1 Real 2 (default)
   state:
     choices:
       - present
       - absent
     description:
-      - "Whether the specified Flash Cache should exist or not."
+      - Whether the specified Flash Cache should exist or not.
     required: true
 extends_documentation_fragment: hpe3par
-short_description: "Manage HPE 3PAR Flash Cache"
-version_added: "2.4"
+version_added: "2.6"
 '''
 
 EXAMPLES = r'''
     - name: Create Flash Cache
       hpe3par_flash_cache:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
+        storage_system_ip= 10.10.10.1
+        storage_system_username= username
+        storage_system_password= password
         state=present
-        size_in_gib="{{ size_in_gib }}"
+        size_in_gib= 64
 
     - name: Delete Flash Cache
       hpe3par_flash_cache:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
+        storage_system_ip= 10.10.10.1
+        storage_system_username= username
+        storage_system_password= password
         state=absent
 '''
 
@@ -76,123 +76,87 @@ RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils import hpe3par
 try:
     from hpe3par_sdk import client
+    from hpe3parclient import exceptions
+    HAS_3PARCLIENT = True
 except ImportError:
-    client = None
+    HAS_3PARCLIENT = False
 
 
 def create_flash_cache(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         size_in_gib,
         mode):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Flash Cache creation failed. Storage system username or password \
-is null",
-            {})
-    if size_in_gib is None:
-        return (False, False, "Flash Cache creation failed. Size is null", {})
     try:
-        client_obj.login(storage_system_username, storage_system_password)
+        if size_in_gib is None:
+            return (False, False, "Flash Cache creation failed. Size is null")
         if not client_obj.flashCacheExists():
             client_obj.createFlashCache(size_in_gib, mode)
         else:
-            return (True, False, "Flash Cache already present", {})
-    except Exception as e:
-        return (False, False, "Flash Cache creation failed | %s" % e, {})
+            return (True, False, "Flash Cache already present")
+    except exceptions.ClientException as e:
+        return (False, False, "Flash Cache creation failed | %s" % e)
     finally:
         client_obj.logout()
-    return (True, True, "Created Flash Cache successfully.", {})
+    return (True, True, "Created Flash Cache successfully.")
 
 
-def delete_flash_cache(
-        client_obj,
-        storage_system_username,
-        storage_system_password):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Flash Cache deletion failed. Storage system username or password \
-is null",
-            {})
+def delete_flash_cache(client_obj):
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.flashCacheExists():
             client_obj.deleteFlashCache()
         else:
-            return (True, False, "Flash Cache does not exist", {})
-    except Exception as e:
-        return (False, False, "Flash Cache delete failed | %s" % e, {})
+            return (True, False, "Flash Cache does not exist")
+    except exceptions.ClientException as e:
+        return (False, False, "Flash Cache delete failed | %s" % e)
     finally:
         client_obj.logout()
-    return (True, True, "Deleted Flash Cache successfully.", {})
+    return (True, True, "Deleted Flash Cache successfully.")
 
 
 def main():
 
-    fields = {
-        "state": {
-            "required": True,
-            "choices": ['present', 'absent'],
-            "type": 'str'
-        },
-        "storage_system_ip": {
-            "required": True,
-            "type": "str"
-        },
-        "storage_system_username": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "storage_system_password": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "size_in_gib": {
-            "type": "int"
-        },
-        "mode": {
-            "type": "int"
-        }
-    }
+    module = AnsibleModule(argument_spec=hpe3par.flash_cache_argument_spec())
 
-    module = AnsibleModule(argument_spec=fields)
-
-    if client is None:
-        module.fail_json(msg='the python hpe3par_sdk module is required')
+    if not HAS_3PARCLIENT:
+        module.fail_json(
+            msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
-    storage_system_password = module.params["storage_system_password"]
-
+    storage_system_password = module.params["secure"]
+    secure = module.params["storage_system_password"]
     size_in_gib = module.params["size_in_gib"]
     mode = module.params["mode"]
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
-    client_obj = client.HPE3ParClient(wsapi_url)
+    client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     # States
     if module.params["state"] == "present":
-        return_status, changed, msg, issue_attr_dict = create_flash_cache(
-            client_obj, storage_system_username, storage_system_password,
-            size_in_gib, mode)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = create_flash_cache(
+                client_obj, size_in_gib, mode)
+        except Exception as e:
+            module.fail_json(msg="Flash Cache create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "absent":
-        return_status, changed, msg, issue_attr_dict = delete_flash_cache(
-            client_obj, storage_system_username, storage_system_password)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = delete_flash_cache(
+                client_obj)
+        except Exception as e:
+            module.fail_json(msg="Flash Cache create failed | %s" % e)
+        finally:
+            client_obj.logout()
 
     if return_status:
-        if issue_attr_dict:
-            module.exit_json(changed=changed, msg=msg, issue=issue_attr_dict)
-        else:
-            module.exit_json(changed=changed, msg=msg)
+        module.exit_json(changed=changed, msg=msg)
+
     else:
         module.fail_json(msg=msg)
 
