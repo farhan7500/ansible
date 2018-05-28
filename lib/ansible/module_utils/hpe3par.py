@@ -100,8 +100,8 @@ def flash_cache_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
-    
-	
+
+
 def host_argument_spec():
     spec = {
         "state": {
@@ -118,25 +118,25 @@ def host_argument_spec():
                 'remove_fc_path_from_host',
                 'add_iscsi_path_to_host',
                 'remove_iscsi_path_from_host'
-			],
+            ],
             "type": 'str'
-		},
+        },
         "host_name": {
             "type": "str",
-			"reuqired": True
-		},
+            "reuqired": True
+        },
         "host_domain": {
             "type": "str"
-		},
+        },
         "host_new_name": {
             "type": "str"
-		},
+        },
         "host_fc_wwns": {
             "type": "list"
-		},
+        },
         "host_iscsi_names": {
             "type": "list"
-		},
+        },
         "host_persona": {
             "type": "str",
             "choices": [
@@ -151,24 +151,24 @@ def host_argument_spec():
                 "OPENVMS",
                 "HPUX",
                 "WINDOWS_SERVER"
-			]
-		},
+            ]
+        },
         "force_path_removal": {
             "type": "bool"
-		},
+        },
         "chap_name": {
             "type": "str"
-		},
+        },
         "chap_secret": {
             "type": "str"
-		},
+        },
         "chap_secret_hex": {
             "type": "bool"
-		}
+        }
     }
     spec.update(storage_system_spec)
     return spec
-	
+
 def hostset_argument_spec():
     spec = {
         "state": {
@@ -185,6 +185,43 @@ def hostset_argument_spec():
         },
         "setmembers": {
             "type": "list"
+        }
+    }
+    spec.update(storage_system_spec)
+    return spec
+
+def offline_clone_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": ['present', 'absent', 'resync', 'stop'],
+            "type": 'str'
+        },
+        "clone_name": {
+            "required": True,
+            "type": "str"
+        },
+        "base_volume_name": {
+            "required": False,
+            "type": "str"
+        },
+        "dest_cpg": {
+            "required": False,
+            "type": "str",
+        },
+        "save_snapshot": {
+            "required": False,
+            "type": "bool",
+        },
+        "priority": {
+            "required": False,
+            "type": "str",
+            "choices": ['HIGH', 'MEDIUM', 'LOW'],
+            "default": "MEDIUM"
+        },
+        "skip_zero": {
+            "required": False,
+            "type": "bool",
         }
     }
     spec.update(storage_system_spec)
