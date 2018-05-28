@@ -29,6 +29,7 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = r'''
 ---
+short_description: "Manage HPE 3PAR Host Set"
 author: "Farhan Nomani (nomani@hpe.com)"
 description: "On HPE 3PAR - Create Host Set. - Add Hosts to Host Set. - Remove
  Hosts from Host Set."
@@ -36,64 +37,63 @@ module: hpe3par_hostset
 options:
   domain:
     description:
-      - "The domain in which the VV set or host set will be created."
+      - The domain in which the VV set or host set will be created.
     required: false
   hostset_name:
     description:
-      - "Name of the host set to be created."
+      - Name of the host set to be created.
     required: true
   setmembers:
     description:
-      - "The host to be added to the set.\nRequired with action
-       add_hosts, remove_hosts\n"
+      - The host to be added to the set. Required with action
+       add_hosts, remove_hosts
     required: false
   state:
     description:
-      - "Whether the specified Host Set should exist or not. State also
-       provides actions to add or remove hosts from host set"
+      - Whether the specified Host Set should exist or not. State also
+       provides actions to add or remove hosts from host set
     choices:
       ['present', 'absent', 'add_hosts', 'remove_hosts']
     required: true
 extends_documentation_fragment: hpe3par
-short_description: "Manage HPE 3PAR Host Set"
-version_added: "2.4"
+version_added: 2.6
 '''
 
 EXAMPLES = r'''
-    - name: Create hostset "{{ hostsetset_name }}"
+    - name: Create hostset sample_hostset
       hpe3par_hostset:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=present
-        hostset_name="{{ hostset_name }}"
-        setmembers="{{ add_host_setmembers }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: present
+        hostset_name: sample_hostset
+        setmembers: ["sample_host1", "sample_host2"]
 
-    - name: Add hosts to Hostset "{{ hostsetset_name }}"
+    - name: Add hosts to Hostset sample_hostset
       hpe3par_hostset:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=add_hosts
-        hostset_name="{{ hostset_name }}"
-        setmembers="{{ add_host_setmembers2 }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: add_hosts
+        hostset_name: sample_hostset
+        setmembers: ["sample_host3"]
 
-    - name: Remove hosts from Hostset "{{ hostsetset_name }}"
+    - name: Remove hosts from Hostset sample_hostset
       hpe3par_hostset:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=remove_hosts
-        hostset_name="{{ hostset_name }}"
-        setmembers="{{ remove_host_setmembers }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: remove_hosts
+        hostset_name: sample_hostset
+        setmembers: ["sample_host3"]
 
-    - name: Delete Hostset "{{ hostset_name }}"
+    - name: Delete Hostset sample_hostset
       hpe3par_hostset:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=absent
-        hostset_name="{{ hostset_name }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: absent
+        hostset_name: sample_hostset
 '''
 
 RETURN = r'''
@@ -101,109 +101,53 @@ RETURN = r'''
 
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils import hpe3par
 try:
     from hpe3par_sdk import client
+    from hpe3parclient import exceptions
+    HAS_3PARCLIENT = True
 except ImportError:
-    client = None
+    HAS_3PARCLIENT = False
 
 
 def create_hostset(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         hostset_name,
         domain,
         setmembers):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Hostset create failed. Storage system username or password is \
-null",
-            {})
-    if hostset_name is None:
-        return (
-            False,
-            False,
-            "Hostset create failed. Hostset name is null",
-            {})
-    if len(hostset_name) < 1 or len(hostset_name) > 27:
-        return (False, False, "Hostset create failed. Hostset name must be atleast 1 character and not more than 27 characters", {})
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if not client_obj.hostSetExists(hostset_name):
             client_obj.createHostSet(hostset_name, domain, None, setmembers)
         else:
-            return (True, False, "Hostset already present", {})
-    except Exception as e:
-        return (False, False, "Hostset creation failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Created Hostset %s successfully." % hostset_name, {})
+            return (True, False, "Hostset already present")
+    except exceptions.ClientException as e:
+        return (False, False, "Hostset creation failed | %s" % (e))
+    return (True, True, "Created Hostset %s successfully." % hostset_name)
 
 
 def delete_hostset(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         hostset_name):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Hostset delete failed. Storage system username or password is \
-null",
-            {})
-    if hostset_name is None:
-        return (
-            False,
-            False,
-            "Hostset delete failed. Hostset name is null",
-            {})
-    if len(hostset_name) < 1 or len(hostset_name) > 27:
-        return (False, False, "Hostset create failed. Hostset name must be atleast 1 character and not more than 27 characters", {})
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.hostSetExists(hostset_name):
             client_obj.deleteHostSet(hostset_name)
         else:
-            return (True, False, "Hostset does not exist", {})
-    except Exception as e:
-        return (False, False, "Hostset delete failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Deleted Hostset %s successfully." % hostset_name, {})
+            return (True, False, "Hostset does not exist")
+    except exceptions.ClientException as e:
+        return (False, False, "Hostset delete failed | %s" % (e))
+    return (True, True, "Deleted Hostset %s successfully." % hostset_name)
 
 
 def add_hosts(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         hostset_name,
         setmembers):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Add host to hostset failed. Storage system username or password \
-is null",
-            {})
-    if hostset_name is None:
-        return (
-            False,
-            False,
-            "Add host to hostset failed. Hostset name is null",
-            {})
-    if len(hostset_name) < 1 or len(hostset_name) > 27:
-        return (False, False, "Hostset create failed. Hostset name must be atleast 1 character and not more than 27 characters", {})
     if setmembers is None:
         return (
             False,
             False,
-            "setmembers delete failed. Setmembers is null",
-            {})
+            "setmembers delete failed. Setmembers is null")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.hostSetExists(hostset_name):
             existing_set_members = client_obj.getHostSet(
                 hostset_name).setmembers
@@ -219,46 +163,24 @@ is null",
                     True,
                     False,
                     "No new members to add to the Host set %s. Nothing to \
-do." % hostset_name,
-                    {})
+do." % hostset_name)
         else:
-            return (False, False, "Hostset does not exist", {})
-    except Exception as e:
-        return (False, False, "Add hosts to hostset failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Added hosts successfully.", {})
+            return (False, False, "Hostset does not exist")
+    except exceptions.ClientException as e:
+        return (False, False, "Add hosts to hostset failed | %s" % e)
+    return (True, True, "Added hosts successfully.")
 
 
 def remove_hosts(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         hostset_name,
         setmembers):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Remove host from hostset failed. Storage system username or \
-password is null",
-            {})
-    if hostset_name is None:
-        return (
-            False,
-            False,
-            "Remove host from hostset failed. Hostset name is null",
-            {})
-    if len(hostset_name) < 1 or len(hostset_name) > 27:
-        return (False, False, "Hostset create failed. Hostset name must be atleast 1 character and not more than 27 characters", {})
     if setmembers is None:
         return (
             False,
             False,
-            "setmembers delete failed. Setmembers is null",
-            {})
+            "setmembers delete failed. Setmembers is null")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.hostSetExists(hostset_name):
             existing_set_members = client_obj.getHostSet(
                 hostset_name).setmembers
@@ -274,52 +196,20 @@ password is null",
                     False,
                     "No members to remove from the Host set %s. Nothing to do." %
                     hostset_name,
-                    {})
+                )
         else:
-            return (True, False, "Hostset does not exist", {})
+            return (True, False, "Hostset does not exist")
     except Exception as e:
-        return (False, False, "Remove hosts from hostset failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Removed hosts successfully.", {})
+        return (False, False, "Remove hosts from hostset failed | %s" % e)
+    return (True, True, "Removed hosts successfully.")
 
 
 def main():
-    fields = {
-        "state": {
-            "required": True,
-            "choices": ['present', 'absent', 'add_hosts', 'remove_hosts'],
-            "type": 'str'
-        },
-        "storage_system_ip": {
-            "required": True,
-            "type": "str"
-        },
-        "storage_system_username": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "storage_system_password": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "hostset_name": {
-            "required": True,
-            "type": "str"
-        },
-        "domain": {
-            "type": "str"
-        },
-        "setmembers": {
-            "type": "list"
-        }
-    }
-    module = AnsibleModule(argument_spec=fields)
 
-    if client is None:
-        module.fail_json(msg='the python hpe3par_sdk module is required')
+    module = AnsibleModule(argument_spec=hpe3par.hostset_argument_spec())
+
+    if not HAS_3PARCLIENT:
+        module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -327,33 +217,54 @@ def main():
     hostset_name = module.params["hostset_name"]
     domain = module.params["domain"]
     setmembers = module.params["setmembers"]
+    secure = module.params["secure"]
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
-    client_obj = client.HPE3ParClient(wsapi_url)
+    client_obj = client.HPE3ParClient(wsapi_url, secure)
+
+    if len(hostset_name) < 1 or len(hostset_name) > 27:
+        rmodule.fail_json(msg="Hostset name must be atleast 1 character and not more than 27 characters")
 
     # States
     if module.params["state"] == "present":
-        return_status, changed, msg, issue_attr_dict = create_hostset(
-            client_obj, storage_system_username, storage_system_password,
-            hostset_name, domain, setmembers)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = create_hostset(
+                client_obj, hostset_name, domain, setmembers)
+        except Exception as e:
+            module.fail_json(msg="Host create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "absent":
-        return_status, changed, msg, issue_attr_dict = delete_hostset(
-            client_obj, storage_system_username, storage_system_password,
-            hostset_name)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = delete_hostset(
+                client_obj, hostset_name)
+        except Exception as e:
+            module.fail_json(msg="Host create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "add_hosts":
-        return_status, changed, msg, issue_attr_dict = add_hosts(
-            client_obj, storage_system_username, storage_system_password,
-            hostset_name, setmembers)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = add_hosts(
+                client_obj, hostset_name, setmembers)
+        except Exception as e:
+            module.fail_json(msg="Host create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "remove_hosts":
-        return_status, changed, msg, issue_attr_dict = remove_hosts(
-            client_obj, storage_system_username, storage_system_password,
-            hostset_name, setmembers)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = remove_hosts(
+                client_obj, hostset_name, setmembers)
+        except Exception as e:
+            module.fail_json(msg="Host create failed | %s" % e)
+        finally:
+            client_obj.logout()
 
     if return_status:
-        if issue_attr_dict:
-            module.exit_json(changed=changed, msg=msg, issue=issue_attr_dict)
-        else:
-            module.exit_json(changed=changed, msg=msg)
+        module.exit_json(changed=changed, msg=msg)
     else:
         module.fail_json(msg=msg)
 

@@ -473,8 +473,6 @@ def test_main_exit_functionality_success_without_issue_attr_dict_add_initiator_c
     instance.exit_json.assert_called_with(
         changed=True, msg="Add_initiator_chap successfully.")
         
-#################################################
-
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.remove_initiator_chap')
@@ -594,7 +592,7 @@ def test_main_exit_functionality_success_without_issue_attr_dict_remove_iscsi_pa
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="remove_iscsi_path_from_host successfully.")
-		
+        
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 def test_main_exit_functionality_success_without_issue_attr_dict_remove_target_chap(

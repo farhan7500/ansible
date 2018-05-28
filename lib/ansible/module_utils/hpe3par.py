@@ -168,3 +168,24 @@ def host_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
+	
+def hostset_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": ['present', 'absent', 'add_hosts', 'remove_hosts'],
+            "type": 'str'
+        },
+        "hostset_name": {
+            "required": True,
+            "type": "str"
+        },
+        "domain": {
+            "type": "str"
+        },
+        "setmembers": {
+            "type": "list"
+        }
+    }
+    spec.update(storage_system_spec)
+    return spec
