@@ -130,17 +130,14 @@ def create_offline_clone(
         skip_zero,
         save_snapshot,
         priority):
-    print ('I am here')
     if base_volume_name is None:
         return (
             False,
             False,
             "Offline clone create failed. Base volume name is null",
         )
-    print ('I am here now')
     if len(base_volume_name) < 1 or len(base_volume_name) > 31:
         return (False, False, "Clone create failed. Base volume name must be atleast 1 character and not more than 31 characters")
-    print ('I am here now then')
     try:
         if not client_obj.onlinePhysicalCopyExists(
                 base_volume_name,
@@ -277,14 +274,11 @@ def main():
     # States
     if module.params["state"] == "present":
         try:
-            print ('TATA')
             client_obj.login(storage_system_username, storage_system_password)
-            print ('GAGA')
             client_obj.setSSHOptions(
                 storage_system_ip,
                 storage_system_username,
                 storage_system_password)
-            print ('LALA')
             return_status, changed, msg = create_offline_clone(
                 client_obj, clone_name, base_volume_name, dest_cpg,
                 skip_zero, save_snapshot, priority)
