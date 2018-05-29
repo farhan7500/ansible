@@ -29,93 +29,84 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = r'''
 ---
-author: "Farhan Nomani (nomani@hpe.com)"
-description: "On HPE 3PAR - Create Snapshot. - Delete Snapshot. - Modify
- Snapshot."
+short_description: Manage HPE 3PAR Snapshots
+author:
+  - Farhan Nomani (@farhan7500)
+  - Gautham P Hegde (@gautamphegde)
+description: On HPE 3PAR - Create Snapshot. - Delete Snapshot. - Modify
+ Snapshot.
 module: hpe3par_snapshot
 options:
   allow_remote_copy_parent:
     description:
-      - "Allows the promote operation to proceed even if the RW parent volume
+      - Allows the promote operation to proceed even if the RW parent volume
        is currently in a Remote Copy volume group, if that group has not been
        started. If the Remote Copy group has been started, this command
-       fails.\n"
-    required: false
+       fails.
     type: bool
   base_volume_name:
     description:
-      - "Specifies the source volume.\nRequired with action present\n"
-    required: false
+      - Specifies the source volume.\nRequired with action present.
   expiration_hours:
     default: 0
     description:
-      - "Specifies the relative time from the current time that the volume
+      - "=Specifies the relative time from the current time that the volume
        expires. Value is a positive integer and in the range of 1 to 43,800
-       hours, or 1825 days.\n"
-    required: false
+       hours, or 1825 days.
   expiration_time:
     description:
-      - "Specifies the relative time from the current time that the volume
+      - Specifies the relative time from the current time that the volume
        expires. Value is a positive integer and in the range of 1 to 43,800
-       hours, or 1825 days.\n"
-    required: false
+       hours, or 1825 days.
   expiration_unit:
     choices:
       - Hours
       - Days
     default: Hours
     description:
-      - "Unit of Expiration Time."
-    required: false
+      - Unit of Expiration Time.
   new_name:
     description:
-      - "New name of the volume."
-    required: false
+      - New name of the volume.
   priority:
     choices:
       - HIGH
       - MEDIUM
       - LOW
     description:
-      - "Does not apply to online promote operation or to stop promote
-       operation."
-    required: false
+      - Does not apply to online promote operation or to stop promote
+       operation.
   read_only:
     description:
-      - "Specifies that the copied volume is read-only. false(default) The
-       volume is read/write.\n"
-    required: false
+      - Specifies that the copied volume is read-only. false(default) The
+       volume is read/write.
     type: bool
   retention_hours:
     default: 0
     description:
-      - "Specifies the relative time from the current time that the volume
+      - Specifies the relative time from the current time that the volume
        expires. Value is a positive integer and in the range of 1 to 43,800
-       hours, or 1825 days.\n"
-    required: false
+       hours, or 1825 days.
   retention_time:
     description:
-      - "Specifies the relative time from the current time that the volume will
+      - Specifies the relative time from the current time that the volume will
        expire. Value is a positive integer and in the range of 1 to 43,800
-       hours, or 1825 days.\n"
-    required: false
+       hours, or 1825 days.
   retention_unit:
     choices:
       - Hours
       - Days
     default: Hours
     description:
-      - "Unit of Retention Time."
-    required: false
+      - Unit of Retention Time.
   rm_exp_time:
     description:
-      - "Enables (false) or disables (true) resetting the expiration time. If
-       false, and expiration time value is a positive number, then set."
-    required: false
+      - Enables (false) or disables (true) resetting the expiration time. If
+       false, and expiration time value is a positive number, then set.
     type: bool
   snapshot_name:
     description:
-      - "Specifies a snapshot volume name."
+      - Specifies a snapshot volume name.
     required: true
   state:
     choices:
@@ -125,68 +116,70 @@ options:
       - restore_offline
       - restore_online
     description:
-      - "Whether the specified Snapshot should exist or not. State also
-       provides actions to modify and restore snapshots.\n"
+      - Whether the specified Snapshot should exist or not. State also
+       provides actions to modify and restore snapshots.
     required: true
 extends_documentation_fragment: hpe3par
-short_description: "Manage HPE 3PAR Snapshots"
-version_added: "2.4"
+version_added: 2.6
 '''
 
 EXAMPLES = r'''
     - name: Create Volume snasphot my_ansible_snapshot
       hpe3par_snapshot:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=present
-        snapshot_name="{{ snapshot_name }}"
-        base_volume_name="{{ base_volume_name }}"
-        read_only=False
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: present
+        snapshot_name: sample_snapshot
+        base_volume_name: sample_base_volume
+        read_only: false
 
     - name: Restore offline Volume snasphot my_ansible_snapshot
       hpe3par_snapshot:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=restore_offline
-        snapshot_name="{{ snapshot_name }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: restore_offline
+        snapshot_name: sample_snapshot
         priority="MEDIUM"
 
     - name: Restore offline Volume snasphot my_ansible_snapshot
       hpe3par_snapshot:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=restore_online
-        snapshot_name="{{ snapshot_name }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: restore_online
+        snapshot_name: sample_snapshot
 
     - name: Modify/rename snasphot my_ansible_snapshot to my_ansible_snapshot_renamed
       hpe3par_snapshot:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=modify
-        snapshot_name="{{ snapshot_name }}"
-        new_name="{{ new_name }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: modify
+        snapshot_name: sample_snapshot
+        new_name: new_snapshot
 
     - name: Delete snasphot my_ansible_snapshot_renamed
       hpe3par_snapshot:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=absent
-        snapshot_name="{{ snapshot_name }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: absent
+        snapshot_name: sample_snapshot
 '''
 
 RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils import hpe3par, basic
 try:
     from hpe3par_sdk import client
+    from hpe3parclient import exceptions
+    HAS_3PARCLIENT = True
 except ImportError:
-    client = None
+    HAS_3PARCLIENT = False
 
 
 def convert_to_hours(time, unit):
@@ -200,8 +193,6 @@ def convert_to_hours(time, unit):
 
 def create_snapshot(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         snapshot_name,
         base_volume_name,
         read_only,
@@ -209,31 +200,16 @@ def create_snapshot(
         retention_time,
         expiration_unit,
         retention_unit):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Snapshot create failed. Storage system username or password is \
-null",
-            {})
-    if snapshot_name is None:
-        return (
-            False,
-            False,
-            "Snapshot create failed. Snapshot name is null",
-            {})
     if len(snapshot_name) < 1 or len(snapshot_name) > 31:
-        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters")
     if base_volume_name is None:
         return (
             False,
             False,
-            "Snapshot create failed. Base volume name is null",
-            {})
+            "Snapshot create failed. Base volume name is null")
     if len(base_volume_name) < 1 or len(base_volume_name) > 31:
-        return (False, False, "Snapshot create failed. Base volume name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Snapshot create failed. Base volume name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if not client_obj.volumeExists(snapshot_name):
             optional = {
                 'readOnly': read_only,
@@ -246,121 +222,64 @@ null",
             client_obj.createSnapshot(
                 snapshot_name, base_volume_name, optional)
         else:
-            return (True, False, "Volume/Snapshot already present", {})
-    except Exception as e:
-        return (False, False, "Snapshot creation failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
+            return (True, False, "Volume/Snapshot already present")
+    except exceptions.ClientException as e:
+        return (False, False, "Snapshot creation failed | %s" % (e))
     return (
         True,
         True,
         "Created Snapshot %s successfully." %
-        snapshot_name,
-        {})
+        snapshot_name)
 
 
 def modify_snapshot(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         snapshot_name,
         new_name,
         expiration_hours,
         retention_hours,
         rm_exp_time):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Modify snapshot failed. Storage system username or password is \
-null",
-            {})
-    if snapshot_name is None:
-        return (
-            False,
-            False,
-            "Modify snapshot failed. Snapshot name is null",
-            {})
     if len(snapshot_name) < 1 or len(snapshot_name) > 31:
-        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         volume_mods = {
             'expirationHours': expiration_hours,
             'newName': new_name,
             'retentionHours': retention_hours,
             'rmExpTime': rm_exp_time}
         client_obj.modifyVolume(snapshot_name, volume_mods)
-    except Exception as e:
-        return (False, False, "Modify Snapshot failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Modified Snapshot %s successfully." % snapshot_name,
-            {})
+    except exceptions.ClientException as e:
+        return (False, False, "Modify Snapshot failed | %s" % e)
+    return (True, True, "Modified Snapshot %s successfully." % snapshot_name)
 
 
 def delete_snapshot(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         snapshot_name):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Snapshot delete failed. Storage system username or password is \
-null",
-            {})
-    if snapshot_name is None:
-        return (
-            False,
-            False,
-            "Snapshot delete failed. Snapshot name is null",
-            {})
     if len(snapshot_name) < 1 or len(snapshot_name) > 31:
-        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.volumeExists(snapshot_name):
             client_obj.deleteVolume(snapshot_name)
         else:
-            return (True, False, "Volume/Snapshot does not exist", {})
-    except Exception as e:
-        return (False, False, "Snapshot delete failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
+            return (True, False, "Volume/Snapshot does not exist")
+    except exceptions.ClientException as e:
+        return (False, False, "Snapshot delete failed | %s" % (e))
     return (
         True,
         True,
         "Deleted Snapshot %s successfully." %
-        snapshot_name,
-        {})
+        snapshot_name)
 
 
 def restore_snapshot_offline(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         snapshot_name,
         priority,
         allow_remote_copy_parent):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Offline snapshot restore failed. Storage system username or \
-password is null",
-            {})
-    if snapshot_name is None:
-        return (
-            False,
-            False,
-            "Offline snapshot restore failed. Snapshot name is null",
-            {})
     if len(snapshot_name) < 1 or len(snapshot_name) > 31:
-        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         optional = {
             'online': False,
             'allowRemoteCopyParent': allow_remote_copy_parent,
@@ -368,133 +287,41 @@ password is null",
                 client.HPE3ParClient.TaskPriority,
                 priority)}
         client_obj.promoteVirtualCopy(snapshot_name, optional)
-    except Exception as e:
-        return (False, False, "Offline snapshot restore failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
+    except exceptions.ClientException as e:
+        return (False, False, "Offline snapshot restore failed | %s" % (e))
     return (
         True,
         True,
         "Restored offline snapshot %s successfully." %
-        snapshot_name,
-        {})
+        snapshot_name)
 
 
 def restore_snapshot_online(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         snapshot_name,
         allow_remote_copy_parent):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Online snapshot restore failed. Storage system username or \
-password is null",
-            {})
-    if snapshot_name is None:
-        return (
-            False,
-            False,
-            "Online snapshot restore failed. Snapshot name is null",
-            {})
     if len(snapshot_name) < 1 or len(snapshot_name) > 31:
-        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Snapshot create failed. Snapshot name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         optional = {'online': True,
                     'allowRemoteCopyParent': allow_remote_copy_parent
                     }
         client_obj.promoteVirtualCopy(snapshot_name, optional)
-    except Exception as e:
-        return (False, False, "Online snapshot restore failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
+    except exceptions.ClientException as e:
+        return (False, False, "Online snapshot restore failed | %s" % (e))
     return (
         True,
         True,
         "Restored online Snapshot %s successfully." %
-        snapshot_name,
-        {})
+        snapshot_name)
 
 
 def main():
+    module = AnsibleModule(argument_spec=hpe3par.snapshot_argument_spec())
 
-    fields = {
-        "state": {
-            "required": True,
-            "choices": ['present', 'absent', 'modify', 'restore_offline',
-                        'restore_online'],
-            "type": 'str'
-        },
-        "storage_system_ip": {
-            "required": True,
-            "type": "str"
-        },
-        "storage_system_username": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "storage_system_password": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "snapshot_name": {
-            "required": True,
-            "type": "str"
-        },
-        "base_volume_name": {
-            "type": "str"
-        },
-        "read_only": {
-            "type": "bool"
-        },
-        "expiration_time": {
-            "type": "int",
-        },
-        "retention_time": {
-            "type": "int"
-        },
-        "expiration_unit": {
-            "type": "str",
-            "choices": ['Hours', 'Days'],
-            "default": 'Hours'
-        },
-        "retention_unit": {
-            "type": "str",
-            "choices": ['Hours', 'Days'],
-            "default": 'Hours'
-        },
-        "expiration_hours": {
-            "type": "int",
-            "default": 0
-        },
-        "retention_hours": {
-            "type": "int",
-            "default": 0
-        },
-        "priority": {
-            "type": "str",
-            "choices": ['HIGH', 'MEDIUM', 'LOW'],
-        },
-        "allow_remote_copy_parent": {
-            "type": "bool"
-        },
-        "new_name": {
-            "type": "str"
-        },
-        "rm_exp_time": {
-            "type": "bool"
-        }
-    }
-
-    module = AnsibleModule(argument_spec=fields)
-
-    if client is None:
-        module.fail_json(msg='the python hpe3par_sdk module is required')
+    if not HAS_3PARCLIENT:
+        module.fail_json(
+            msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -512,41 +339,68 @@ def main():
     allow_remote_copy_parent = module.params["allow_remote_copy_parent"]
     new_name = module.params["new_name"]
     rm_exp_time = module.params["rm_exp_time"]
+    secure = module.params["secure"]
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
-    client_obj = client.HPE3ParClient(wsapi_url)
+    client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     # States
     if module.params["state"] == "present":
-        return_status, changed, msg, issue_attr_dict = create_snapshot(
-            client_obj, storage_system_username, storage_system_password,
-            snapshot_name, base_volume_name, read_only, expiration_time,
-            retention_time, expiration_unit, retention_unit)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = create_snapshot(
+                client_obj, 
+                snapshot_name, base_volume_name, read_only, expiration_time,
+                retention_time, expiration_unit, retention_unit)
+        except Exception as e:
+            module.fail_json(msg="Snapshot create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "modify":
-        return_status, changed, msg, issue_attr_dict = modify_snapshot(
-            client_obj, storage_system_username, storage_system_password,
-            snapshot_name, new_name, expiration_hours, retention_hours,
-            rm_exp_time)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = modify_snapshot(
+                client_obj, 
+                snapshot_name, new_name, expiration_hours, retention_hours,
+                rm_exp_time)
+        except Exception as e:
+            module.fail_json(msg="Snapshot modify failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "absent":
-        return_status, changed, msg, issue_attr_dict = delete_snapshot(
-            client_obj, storage_system_username, storage_system_password,
-            snapshot_name)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = delete_snapshot(
+                client_obj, 
+                snapshot_name)
+        except Exception as e:
+            module.fail_json(msg="Snapshot delete failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "restore_offline":
-        return_status, changed, msg, issue_attr_dict = (
-            restore_snapshot_offline(client_obj, storage_system_username,
-                                     storage_system_password,
-                                     snapshot_name, priority,
-                                     allow_remote_copy_parent))
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = (
+                restore_snapshot_offline(client_obj, 
+                                         snapshot_name, priority,
+                                         allow_remote_copy_parent))
+        except Exception as e:
+            module.fail_json(msg="Snapshot offline restore failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "restore_online":
-        return_status, changed, msg, issue_attr_dict = restore_snapshot_online(
-            client_obj, storage_system_username, storage_system_password,
-            snapshot_name, allow_remote_copy_parent)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = restore_snapshot_online(
+                client_obj, 
+                snapshot_name, allow_remote_copy_parent)
+        except Exception as e:
+            module.fail_json(msg="Snapshot online restore failed | %s" % e)
+        finally:
+            client_obj.logout()
 
     if return_status:
-        if issue_attr_dict:
-            module.exit_json(changed=changed, msg=msg, issue=issue_attr_dict)
-        else:
-            module.exit_json(changed=changed, msg=msg)
+        module.exit_json(changed=changed, msg=msg)
     else:
         module.fail_json(msg=msg)
 

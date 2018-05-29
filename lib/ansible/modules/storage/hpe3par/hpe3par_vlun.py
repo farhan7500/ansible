@@ -29,46 +29,42 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = r'''
 ---
-author: "Farhan Nomani (nomani@hpe.com)"
-description: "On HPE 3PAR - Export volume to host. - Export volumeset to host.
+short_description: Manage HPE 3PAR VLUN
+author:
+  - Farhan Nomani (@farhan7500)
+  - Gautham P Hegde (@gautamphegde)
+description: On HPE 3PAR - Export volume to host. - Export volumeset to host.
  - Export volume to hostset. - Export volumeset to hostset. - Unexport volume
  from host. - Unexport volumeset from host. - Unexport volume from hostset. -
- Unexport volumeset from hostset."
+ Unexport volumeset from hostset.
 module: hpe3par_vlun
 options:
   autolun:
     default: false
     description:
-      - "States whether the lun number should be autosigned."
-    required: false
+      - States whether the lun number should be autosigned.
     type: bool
   card_port:
     description:
-      - "Port number on the FC card."
-    required: false
+      - Port number on the FC card.
   host_name:
     description:
-      - "Name of the host to which the volume or VV set is to be exported."
-    required: false
+      - Name of the host to which the volume or VV set is to be exported.
   host_set_name:
     description:
-      - "Name of the host set to which the volume or VV set is to be exported.
-       \nRequired with action export_volume_to_hostset,
+      - Name of the host set to which the volume or VV set is to be exported.
+       Required with action export_volume_to_hostset,
        unexport_volume_from_hostset, export_volumeset_to_hostset,
-       unexport_volumeset_from_hostset\n"
-    required: false
+       unexport_volumeset_from_hostset
   lunid:
     description:
-      - "LUN ID."
-    required: false
+      - LUN ID.
   node_val:
     description:
-      - "System node."
-    required: false
+      - System node.
   slot:
     description:
-      - "PCI bus slot in the node."
-    required: false
+      - PCI bus slot in the node.
   state:
     choices:
       - export_volume_to_host
@@ -80,93 +76,92 @@ options:
       - export_volumeset_to_hostset
       - unexport_volumeset_from_hostset
     description:
-      - "Whether the specified export should exist or not."
+      - Whether the specified export should exist or not.
     required: true
   volume_name:
     description:
-      - "Name of the volume to export."
+      - Name of the volume to export.
     required: true
   volume_set_name:
     description:
-      - "Name of the VV set to export.\nRequired with action
+      - Name of the VV set to export.\nRequired with action
        export_volumeset_to_host, unexport_volumeset_from_host,
-       export_volumeset_to_hostset, unexport_volumeset_from_hostset\n"
-    required: false
+       export_volumeset_to_hostset, unexport_volumeset_from_hostset.
 extends_documentation_fragment: hpe3par
-short_description: "Manage HPE 3PAR VLUN"
-version_added: "2.4"
+version_added: 2.6
 '''
 
 EXAMPLES = r'''
     - name: Create VLUN
       hpe3par_vlun:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=export_volume_to_host
-        volume_name="{{ volume_name }}"
-        host_name="{{ host_name }}"
-        lunid="{{ lunid }}"
-        autolun="{{ autolun }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: export_volume_to_host
+        volume_name: sample_volume
+        host_name: sample_host
+        lunid: 110
+        autolun: false
 
     - name: Create VLUN
       hpe3par_vlun:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=export_volume_to_hostset
-        volume_name="{{ vlun_volume_name }}"
-        host_set_name="{{ hostset_name }}"
-        lunid="{{ lunid }}"
-        autolun="{{ autolun }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: export_volume_to_hostset
+        volume_name: sample_volume
+        host_set_name: sample_hostset
+        lunid: 110
+        autolun: false
 
     - name: Create VLUN
       hpe3par_vlun:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=export_volumeset_to_host
-        volume_set_name="{{ volumeset_name }}"
-        host_name="{{ vlun_host_name }}"
-        lunid="{{ lunid }}"
-        autolun="{{ autolun }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: export_volumeset_to_host
+        volume_set_name: sample_volumeset
+        host_name: sample_host
+        lunid: 110
+        autolun: false
 
     - name: Create VLUN
       hpe3par_vlun:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=export_volumeset_to_hostset
-        volume_set_name="{{ volumeset_name }}"
-        host_set_name="{{ hostset_name }}"
-        lunid="{{ lunid }}"
-        autolun="{{ autolun }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: export_volumeset_to_hostset
+        volume_set_name: sample_volumeset
+        host_set_name: sample_hostset
+        lunid: 110
+        autolun: false
 
     - name: Delete VLUN
       hpe3par_vlun:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=unexport_volume_from_host
-        volume_name="{{ volume_name }}"
-        host_name="{{ host_name }}"
-        lunid="{{ lunid }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: unexport_volume_from_host
+        volume_name: sample_volume
+        lunid: 110
+        autolun: false
 '''
 
 RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils import hpe3par, basic
 try:
     from hpe3par_sdk import client
+    from hpe3parclient import exceptions
+    HAS_3PARCLIENT = True
 except ImportError:
-    client = None
+    HAS_3PARCLIENT = False
 
 
 def export_volume_to_host(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volume_name,
         lunid,
         host_name,
@@ -181,18 +176,15 @@ def export_volume_to_host(
                 False,
                 False,
                 'Attribute host_name or port positions or both need to be \
-specified to create a vlun',
-                {})
+specified to create a vlun')
 
         if host_name is None and (
                 node_val is None or slot is None or card_port is None):
             return (
                 False,
                 False,
-                'Node, Slot and Port need to be specified to create a vlun',
-                {})
+                'Node, Slot and Port need to be specified to create a vlun')
 
-        client_obj.login(storage_system_username, storage_system_password)
         port_pos = None
 
         if node_val is not None and slot is not None and card_port is not None:
@@ -220,20 +212,16 @@ specified to create a vlun',
                         None,
                         autolun)
                 else:
-                    return (True, False, "VLUN already present", {})
+                    return (True, False, "VLUN already present")
             else:
-                return (False, False, "Lun ID is required", {})
-    except Exception as e:
-        return (False, False, "VLUN creation failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Created VLUN successfully.", {})
+                return (False, False, "Lun ID is required")
+    except exceptions.ClientException as e:
+        return (False, False, "VLUN creation failed | %s" % e)
+    return (True, True, "Created VLUN successfully.")
 
 
 def unexport_volume_from_host(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volume_name,
         lunid,
         host_name,
@@ -241,7 +229,6 @@ def unexport_volume_from_host(
         slot,
         card_port):
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         port_pos = None
 
         if volume_name is not None and volume_name:
@@ -257,24 +244,20 @@ def unexport_volume_from_host(
                         client_obj.deleteVLUN(
                             volume_name, lunid, host_name, port_pos)
                     else:
-                        return (False, False, "VLUN does not exist", {})
+                        return (False, False, "VLUN does not exist")
                 else:
-                    return (False, False, "Lun ID is required", {})
+                    return (False, False, "Lun ID is required")
             else:
-                return (False, False, 'Node, Slot and Port or host name need to be specified to unexport a vlun', {})
+                return (False, False, 'Node, Slot and Port or host name need to be specified to unexport a vlun')
         else:
-            return (False, False, "Volume name is required", {})
-    except Exception as e:
-        return (False, False, "VLUN deletion failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Deleted VLUN successfully.", {})
+            return (False, False, "Volume name is required")
+    except exceptions.ClientException as e:
+        return (False, False, "VLUN deletion failed | %s" % e)
+    return (True, True, "Deleted VLUN successfully.")
 
 
 def export_volume_to_hostset(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volume_name,
         lunid,
         host_set_name,
@@ -287,19 +270,16 @@ def export_volume_to_hostset(
             return (
                 False,
                 False,
-                'Attribute volume name is required for vlun creation',
-                {})
+                'Attribute volume name is required for vlun creation')
 
         if host_set_name is None:
             return (
                 False,
                 False,
-                'Attribute hostset_name is required to export a vlun',
-                {})
+                'Attribute hostset_name is required to export a vlun')
         else:
             host_set_name = 'set:' + host_set_name
 
-        client_obj.login(storage_system_username, storage_system_password)
         port_pos = None
 
         if node_val is not None and slot is not None and card_port is not None:
@@ -327,21 +307,17 @@ def export_volume_to_hostset(
                         None,
                         autolun)
                 else:
-                    return (True, False, "VLUN already present", {})
+                    return (True, False, "VLUN already present")
             else:
-                return (False, False, "Lun ID is required", {})
+                return (False, False, "Lun ID is required")
 
-    except Exception as e:
-        return (False, False, "VLUN creation failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Created VLUN successfully.", {})
+    except exceptions.ClientException as e:
+        return (False, False, "VLUN creation failed | %s" % e)
+    return (True, True, "Created VLUN successfully.")
 
 
 def unexport_volume_from_hostset(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volume_name,
         lunid,
         host_set_name,
@@ -349,23 +325,19 @@ def unexport_volume_from_hostset(
         slot,
         card_port):
     try:
-        client_obj.login(storage_system_username, storage_system_password)
-
         if host_set_name is None and (
                 node_val is None or slot is None or card_port is None):
             return (
                 False,
                 False,
                 'Node, Slot and Port or host name need to be specified to \
-unexport a vlun',
-                {})
+unexport a vlun')
 
         if host_set_name is None:
             return (
                 False,
                 False,
-                'Attribute hostset_name is required to unexport a vlun',
-                {})
+                'Attribute hostset_name is required to unexport a vlun')
         else:
             host_set_name = 'set:' + host_set_name
 
@@ -375,20 +347,16 @@ unexport a vlun',
                 client_obj.deleteVLUN(volume_name, lunid,
                                       host_set_name, port_pos)
             else:
-                return (False, False, "VLUN does not exist", {})
+                return (False, False, "VLUN does not exist")
         else:
-            return (False, False, "Lun ID is required", {})
-    except Exception as e:
-        return (False, False, "VLUN deletion failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Deleted VLUN successfully.", {})
+            return (False, False, "Lun ID is required")
+    except exceptions.ClientException as e:
+        return (False, False, "VLUN deletion failed | %s" % e)
+    return (True, True, "Deleted VLUN successfully.")
 
 
 def export_volumeset_to_host(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volume_set_name,
         lunid,
         host_name,
@@ -401,8 +369,7 @@ def export_volumeset_to_host(
             return (
                 False,
                 False,
-                'Attribute volumeset name is required for vlun creation',
-                {})
+                'Attribute volumeset name is required for vlun creation')
 
         if (host_name is None and node_val is None and slot is None and
                 card_port is None):
@@ -410,8 +377,7 @@ def export_volumeset_to_host(
                 False,
                 False,
                 'Attribute host_name or port positions or both need to be \
-specified to create a vlun',
-                {})
+specified to create a vlun')
 
         if host_name is None and (
                 node_val is None or slot is None or card_port is None):
@@ -419,13 +385,11 @@ specified to create a vlun',
                 False,
                 False,
                 'All port positions (node,slot,cardport) are required to \
-create a vlun',
-                {})
+create a vlun')
 
         if volume_set_name:
             volume_set_name = 'set:' + volume_set_name
 
-        client_obj.login(storage_system_username, storage_system_password)
         port_pos = None
 
         if node_val is not None and slot is not None and card_port is not None:
@@ -453,20 +417,16 @@ create a vlun',
                         None,
                         autolun)
                 else:
-                    return (True, False, "VLUN already present", {})
+                    return (True, False, "VLUN already present")
             else:
-                return (False, False, "Lun ID is required", {})
-    except Exception as e:
-        return (False, False, "VLUN creation failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Created VLUN successfully.", {})
+                return (False, False, "Lun ID is required")
+    except exceptions.ClientException as e:
+        return (False, False, "VLUN creation failed | %s" % e)
+    return (True, True, "Created VLUN successfully.")
 
 
 def unexport_volumeset_from_host(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volume_set_name,
         lunid,
         host_name,
@@ -474,23 +434,19 @@ def unexport_volumeset_from_host(
         slot,
         card_port):
     try:
-        client_obj.login(storage_system_username, storage_system_password)
-
         if host_name is None and (
                 node_val is None or slot is None or card_port is None):
             return (
                 False,
                 False,
                 'Node, Slot and Port or host name need to be specified to \
-unexport a vlun',
-                {})
+unexport a vlun')
 
         if volume_set_name is None:
             return (
                 False,
                 False,
-                'Attribute volume_set_name is required to unexport a vlun',
-                {})
+                'Attribute volume_set_name is required to unexport a vlun')
         else:
             volume_set_name = 'set:' + volume_set_name
 
@@ -502,20 +458,16 @@ unexport a vlun',
                 client_obj.deleteVLUN(
                     volume_set_name, lunid, host_name, port_pos)
             else:
-                return (True, False, "VLUN does not exist", {})
+                return (True, False, "VLUN does not exist")
         else:
-            return (False, False, "Lun ID is required", {})
-    except Exception as e:
-        return (False, False, "VLUN deletion failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Deleted VLUN successfully.", {})
+            return (False, False, "Lun ID is required")
+    except exceptions.ClientException as e:
+        return (False, False, "VLUN deletion failed | %s" % e)
+    return (True, True, "Deleted VLUN successfully.")
 
 
 def export_volumeset_to_hostset(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volume_set_name,
         lunid,
         host_set_name,
@@ -528,15 +480,13 @@ def export_volumeset_to_hostset(
             return (
                 False,
                 False,
-                'Attribute volumeset name is required for vlun creation',
-                {})
+                'Attribute volumeset name is required for vlun creation')
 
         if host_set_name is None:
             return (
                 False,
                 False,
-                'Attribute hostset name is required for vlun creation',
-                {})
+                'Attribute hostset name is required for vlun creation')
 
         if volume_set_name is not None and host_set_name is not None:
             volume_set_name = 'set:' + volume_set_name
@@ -546,10 +496,8 @@ def export_volumeset_to_hostset(
                 False,
                 False,
                 'Attribute hostset_name and volumeset_name is required to \
-export a vlun',
-                {})
+export a vlun')
 
-        client_obj.login(storage_system_username, storage_system_password)
         port_pos = None
 
         if node_val is not None and slot is not None and card_port is not None:
@@ -577,20 +525,16 @@ export a vlun',
                         None,
                         autolun)
                 else:
-                    return (True, False, "VLUN already present", {})
+                    return (True, False, "VLUN already present")
             else:
-                return (False, False, "Lun ID is required", {})
-    except Exception as e:
-        return (False, False, "VLUN creation failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Created VLUN successfully.", {})
+                return (False, False, "Lun ID is required")
+    except exceptions.ClientException as e:
+        return (False, False, "VLUN creation failed | %s" % e)
+    return (True, True, "Created VLUN successfully.")
 
 
 def unexport_volumeset_from_hostset(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volume_set_name,
         lunid,
         host_set_name,
@@ -598,16 +542,13 @@ def unexport_volumeset_from_hostset(
         slot,
         card_port):
     try:
-        client_obj.login(storage_system_username, storage_system_password)
-
         if host_set_name is None and (
                 node_val is None or slot is None or card_port is None):
             return (
                 False,
                 False,
                 'Node, Slot and Port or host set name need to be specified to \
-unexport a vlun',
-                {})
+unexport a vlun')
 
         if volume_set_name is not None and host_set_name is not None:
             volume_set_name = 'set:' + volume_set_name
@@ -617,8 +558,7 @@ unexport a vlun',
                 False,
                 False,
                 'Attribute hostset_name and volumeset_name is required to \
-unexport a vlun',
-                {})
+unexport a vlun')
 
         port_pos = None
 
@@ -631,69 +571,20 @@ unexport a vlun',
                 client_obj.deleteVLUN(
                     volume_set_name, lunid, host_set_name, port_pos)
             else:
-                return (True, False, "VLUN does not exist", {})
+                return (True, False, "VLUN does not exist")
         else:
-            return (False, False, "Lun ID is required", {})
-    except Exception as e:
-        return (False, False, "VLUN deletion failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Deleted VLUN successfully.", {})
+            return (False, False, "Lun ID is required")
+    except exceptions.ClientException as e:
+        return (False, False, "VLUN deletion failed | %s" % e)
+    return (True, True, "Deleted VLUN successfully.")
 
 
 def main():
+    module = AnsibleModule(argument_spec=hpe3par.vlun_argument_spec())
 
-    fields = {
-        "state": {
-            "required": True,
-            "choices": [
-                'export_volume_to_host',
-                'unexport_volume_from_host',
-                'export_volumeset_to_host',
-                'unexport_volumeset_from_host',
-                'export_volume_to_hostset',
-                'unexport_volume_from_hostset',
-                'export_volumeset_to_hostset',
-                'unexport_volumeset_from_hostset'],
-            "type": 'str'},
-        "storage_system_ip": {
-            "required": True,
-            "type": "str"},
-        "storage_system_username": {
-            "required": True,
-            "type": "str",
-            "no_log": True},
-        "storage_system_password": {
-            "required": True,
-            "type": "str",
-            "no_log": True},
-        "volume_name": {
-            "required": False,
-            "type": "str"},
-        "volume_set_name": {
-            "required": False,
-            "type": "str"},
-        "lunid": {
-            "type": "int"},
-        "autolun": {
-            "type": "bool",
-            "default": False},
-        "host_name": {
-            "type": "str"},
-        "host_set_name": {
-            "required": False,
-            "type": "str"},
-        "node_val": {
-            "type": "int"},
-        "slot": {
-            "type": "int"},
-        "card_port": {
-            "type": "int"}}
-
-    module = AnsibleModule(argument_spec=fields)
-
-    if client is None:
-        module.fail_json(msg='the python hpe3par_sdk module is required')
+    if not HAS_3PARCLIENT:
+        module.fail_json(
+            msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -708,63 +599,103 @@ def main():
     slot = module.params["slot"]
     card_port = module.params["card_port"]
     autolun = module.params["autolun"]
+    secure = module.params["secure"]
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
-    client_obj = client.HPE3ParClient(wsapi_url)
+    client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     # States
     if module.params["state"] == "export_volume_to_host":
-        return_status, changed, msg, issue_attr_dict = export_volume_to_host(
-            client_obj, storage_system_username, storage_system_password,
-            volume_name, lunid, host_name, node_val, slot, card_port, autolun)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = export_volume_to_host(
+                client_obj, 
+                volume_name, lunid, host_name, node_val, slot, card_port, autolun)
+        except Exception as e:
+            module.fail_json(msg="VLUN create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "unexport_volume_from_host":
-        return_status, changed, msg, issue_attr_dict = unexport_volume_from_host(
-            client_obj, storage_system_username, storage_system_password,
-            volume_name, lunid, host_name, node_val, slot, card_port)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = unexport_volume_from_host(
+                client_obj, 
+                volume_name, lunid, host_name, node_val, slot, card_port)
+        except Exception as e:
+            module.fail_json(msg="VLUN delete failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "export_volumeset_to_hostset":
-        return_status, changed, msg, issue_attr_dict = (
-            export_volumeset_to_hostset(client_obj, storage_system_username,
-                                        storage_system_password,
-                                        volume_set_name, lunid, host_set_name,
-                                        node_val, slot, card_port,
-                                        autolun))
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = (
+                export_volumeset_to_hostset(client_obj, 
+                                            volume_set_name, lunid, host_set_name,
+                                            node_val, slot, card_port,
+                                            autolun))
+        except Exception as e:
+            module.fail_json(msg="VLUN create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "unexport_volumeset_from_hostset":
-        return_status, changed, msg, issue_attr_dict = (
-            unexport_volumeset_from_hostset(client_obj, storage_system_username,
-                                            storage_system_password,
-                                            volume_set_name, lunid,
-                                            host_set_name, node_val, slot,
-                                            card_port))
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = (
+                unexport_volumeset_from_hostset(client_obj, 
+                                                volume_set_name, lunid,
+                                                host_set_name, node_val, slot,
+                                                card_port))
+        except Exception as e:
+            module.fail_json(msg="VLUN delete failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "export_volumeset_to_host":
-        return_status, changed, msg, issue_attr_dict = (
-            export_volumeset_to_host(client_obj, storage_system_username,
-                                     storage_system_password,
-                                     volume_set_name, lunid, host_name,
-                                     node_val, slot, card_port, autolun))
-    elif module.params["state"] == "unexport_volumeset_from_host":
-        return_status, changed, msg, issue_attr_dict = (
-            unexport_volumeset_from_host(client_obj, storage_system_username,
-                                         storage_system_password,
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = (
+                export_volumeset_to_host(client_obj, 
                                          volume_set_name, lunid, host_name,
-                                         node_val, slot, card_port))
+                                         node_val, slot, card_port, autolun))
+        except Exception as e:
+            module.fail_json(msg="VLUN create failed | %s" % e)
+        finally:
+            client_obj.logout()
+    elif module.params["state"] == "unexport_volumeset_from_host":
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = (
+                unexport_volumeset_from_host(client_obj, 
+                                             volume_set_name, lunid, host_name,
+                                             node_val, slot, card_port))
+        except Exception as e:
+            module.fail_json(msg="VLUN delete failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "export_volume_to_hostset":
-        return_status, changed, msg, issue_attr_dict = (
-            export_volume_to_hostset(client_obj, storage_system_username,
-                                     storage_system_password,
-                                     volume_name, lunid, host_set_name,
-                                     node_val, slot, card_port, autolun))
-    elif module.params["state"] == "unexport_volume_from_hostset":
-        return_status, changed, msg, issue_attr_dict = (
-            unexport_volume_from_hostset(client_obj, storage_system_username,
-                                         storage_system_password,
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = (
+                export_volume_to_hostset(client_obj, 
                                          volume_name, lunid, host_set_name,
-                                         node_val, slot, card_port))
-
+                                         node_val, slot, card_port, autolun))
+        except Exception as e:
+            module.fail_json(msg="VLUN create failed | %s" % e)
+        finally:
+            client_obj.logout()
+    elif module.params["state"] == "unexport_volume_from_hostset":
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = (
+                unexport_volume_from_hostset(client_obj, 
+                                             volume_name, lunid, host_set_name,
+                                             node_val, slot, card_port))
+        except Exception as e:
+            module.fail_json(msg="VLUN delete failed | %s" % e)
+        finally:
+            client_obj.logout()
+            
     if return_status:
-        if issue_attr_dict:
-            module.exit_json(changed=changed, msg=msg, issue=issue_attr_dict)
-        else:
-            module.exit_json(changed=changed, msg=msg)
+        module.exit_json(changed=changed, msg=msg)
     else:
         module.fail_json(msg=msg)
 

@@ -400,7 +400,7 @@ def main():
                 bwmax_limit_op, iomin_goal_op, iomax_limit_op, latency_goal,
                 default_latency, enable, latency_goal_usecs)
         except Exception as e:
-            module.fail_json(msg="Clone create failed | %s" % e)
+            module.fail_json(msg="Clone modify failed | %s" % e)
         finally:
             client_obj.logout()
     elif module.params["state"] == "absent":
@@ -410,7 +410,7 @@ def main():
                 client_obj,
                 qos_target_name, type)
         except Exception as e:
-            module.fail_json(msg="Clone create failed | %s" % e)
+            module.fail_json(msg="Clone delete failed | %s" % e)
         finally:
             client_obj.logout()
     if return_status:

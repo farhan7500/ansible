@@ -324,3 +324,98 @@ def qos_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
+    
+def snapshot_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": ['present', 'absent', 'modify', 'restore_offline',
+                        'restore_online'],
+            "type": 'str'
+        },
+        "snapshot_name": {
+            "required": True,
+            "type": "str"
+        },
+        "base_volume_name": {
+            "type": "str"
+        },
+        "read_only": {
+            "type": "bool"
+        },
+        "expiration_time": {
+            "type": "int",
+        },
+        "retention_time": {
+            "type": "int"
+        },
+        "expiration_unit": {
+            "type": "str",
+            "choices": ['Hours', 'Days'],
+            "default": 'Hours'
+        },
+        "retention_unit": {
+            "type": "str",
+            "choices": ['Hours', 'Days'],
+            "default": 'Hours'
+        },
+        "expiration_hours": {
+            "type": "int",
+            "default": 0
+        },
+        "retention_hours": {
+            "type": "int",
+            "default": 0
+        },
+        "priority": {
+            "type": "str",
+            "choices": ['HIGH', 'MEDIUM', 'LOW'],
+        },
+        "allow_remote_copy_parent": {
+            "type": "bool"
+        },
+        "new_name": {
+            "type": "str"
+        },
+        "rm_exp_time": {
+            "type": "bool"
+        }
+    }
+    spec.update(storage_system_spec)
+    return spec
+    
+def vlun_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": [
+                'export_volume_to_host',
+                'unexport_volume_from_host',
+                'export_volumeset_to_host',
+                'unexport_volumeset_from_host',
+                'export_volume_to_hostset',
+                'unexport_volume_from_hostset',
+                'export_volumeset_to_hostset',
+                'unexport_volumeset_from_hostset'],
+            "type": 'str'},
+        "volume_name": {
+            "type": "str"},
+        "volume_set_name": {
+            "type": "str"},
+        "lunid": {
+            "type": "int"},
+        "autolun": {
+            "type": "bool",
+            "default": False},
+        "host_name": {
+            "type": "str"},
+        "host_set_name": {
+            "type": "str"},
+        "node_val": {
+            "type": "int"},
+        "slot": {
+            "type": "int"},
+        "card_port": {
+            "type": "int"}}
+    spec.update(storage_system_spec)
+    return spec
