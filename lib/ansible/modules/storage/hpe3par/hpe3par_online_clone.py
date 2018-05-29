@@ -29,101 +29,94 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = r'''
 ---
-author: "Farhan Nomani (nomani@hpe.com)"
-description: "On HPE 3PAR - Create Online Clone. - Delete Clone. - Resync
- Clone."
+short_description: Manage HPE 3PAR Online Clone
+author:
+  - Farhan Nomani (@farhan7500)
+  - Gautham P Hegde (@gautamphegde)
+description: On HPE 3PAR - Create Online Clone. - Delete Clone. - Resync
+ Clone.
 module: hpe3par_online_clone
 options:
   base_volume_name:
     description:
-      - "Specifies the source volume.\nRequired with action present, absent,
-       stop\n"
-    required: false
+      - Specifies the source volume.\nRequired with action present, absent,
+       stop
   clone_name:
     description:
-      - "Specifies the destination volume."
+      - Specifies the destination volume.
     required: true
   compression:
     description:
-      - "Enables (true) or disables (false) compression of the created volume.
-       Only tpvv or tdvv are compressed."
-    required: false
+      - Enables (true) or disables (false) compression of the created volume.
+       Only tpvv or tdvv are compressed.
     type: bool
   dest_cpg:
     description:
-      - "Specifies the destination CPG for an online copy."
-    required: false
+      - Specifies the destination CPG for an online copy.
   snap_cpg:
     description:
-      - "Specifies the snapshot CPG for an online copy."
-    required: false
+      - Specifies the snapshot CPG for an online copy.
   state:
     choices:
       - present
       - absent
       - resync
     description:
-      - "Whether the specified Clone should exist or not. State also provides
-       actions to resync clone\n"
+      - Whether the specified Clone should exist or not. State also provides
+       actions to resync clone
     required: true
   tdvv:
     description:
-      - "Enables (true) or disables (false) whether the online copy is a TDVV."
-    required: false
+      - Enables (true) or disables (false) whether the online copy is a TDVV.
     type: bool
   tpvv:
     description:
-      - "Enables (true) or disables (false) whether the online copy is a TPVV."
-    required: false
+      - Enables (true) or disables (false) whether the online copy is a TPVV.
     type: bool
 extends_documentation_fragment: hpe3par
-short_description: "Manage HPE 3PAR Online Clone"
-version_added: "2.4"
+version_added: "2.6"
 '''
 
 EXAMPLES = r'''
     - name: Create Clone clone_volume_ansible
       hpe3par_online_clone:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=present
-        clone_name="clone_volume_ansible"
-        base_volume_name="{{ volume_name }}"
-        dest_cpg="{{ cpg }}"
-        tpvv=False
-        tdvv=False
-        compression=False
-        snap_cpg="{{ cpg }}"
-
-    - name: sleep for 100 seconds and continue with play
-      wait_for:
-        timeout=100
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: present
+        clone_name: sample_clone_volume
+        base_volume_name: sample_base_volume
+        dest_cpg: sample_cpg
+        tpvv: false
+        tdvv: false
+        compression: false
+        snap_cpg: sample_cpg
 
     - name: Delete clone "clone_volume_ansible"
       hpe3par_online_clone:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=absent
-        clone_name="clone_volume_ansible"
-        base_volume_name="{{ volume_name }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: absent
+        clone_name: sample_clone_volume
+        base_volume_name: sample_base_volume
 '''
 
 RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils import hpe3par, basic
 try:
     from hpe3par_sdk import client
+    from hpe3parclient import exceptions
+    HAS_3PARCLIENT = True
 except ImportError:
-    client = None
+    HAS_3PARCLIENT = False
 
 
 def create_online_clone(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         base_volume_name,
         clone_name,
         dest_cpg,
@@ -131,31 +124,16 @@ def create_online_clone(
         tdvv,
         snap_cpg,
         compression):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Online clone create failed. Storage system username or password \
-is null",
-            {})
-    if clone_name is None:
-        return (
-            False,
-            False,
-            "Online clone create failed. Clone name is null",
-            {})
     if len(clone_name) < 1 or len(clone_name) > 31:
-        return (False, False, "Clone create failed. Clone name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Clone create failed. Clone name must be atleast 1 character and not more than 31 characters")
     if base_volume_name is None:
         return (
             False,
             False,
-            "Online clone create failed. Base volume name is null",
-            {})
+            "Online clone create failed. Base volume name is null")
     if len(base_volume_name) < 1 or len(base_volume_name) > 31:
-        return (False, False, "Clone create failed. Base volume name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Clone create failed. Base volume name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if not client_obj.volumeExists(clone_name):
             optional = {'online': True,
                         'tpvv': tpvv,
@@ -173,91 +151,46 @@ is null",
             return (
                 True,
                 False,
-                "Clone already exists / creation in progress. Nothing to do.",
-                {})
-    except Exception as e:
-        return (False, False, "Online Clone creation failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
+                "Clone already exists / creation in progress. Nothing to do.")
+    except exceptions.ClientException as e:
+        return (False, False, "Online Clone creation failed | %s" % (e))
     return (
         True,
         True,
         "Created Online Clone %s successfully." %
-        clone_name,
-        {})
+        clone_name)
 
 
 def resync_clone(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         clone_name):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Online clone resync failed. Storage system username or password \
-is null",
-            {})
-    if clone_name is None:
-        return (
-            False,
-            False,
-            "Online clone resync failed. Clone name is null",
-            {})
     if len(clone_name) < 1 or len(clone_name) > 31:
-        return (False, False, "Clone create failed. Clone name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Clone create failed. Clone name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         client_obj.resyncPhysicalCopy(clone_name)
-    except Exception as e:
-        return (False, False, "Online clone resync failed | %s" % e, {})
-    finally:
-        client_obj.logout()
+    except exceptions.ClientException as e:
+        return (False, False, "Online clone resync failed | %s" % e)
     return (
         True,
         True,
         "Resync-ed Online Clone %s successfully." %
-        clone_name,
-        {})
+        clone_name)
 
 
 def delete_clone(
         client_obj,
-        storage_system_ip,
-        storage_system_username,
-        storage_system_password,
         clone_name,
         base_volume_name):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Online clone delete failed. Storage system username or password \
-is null",
-            {})
-    if clone_name is None:
-        return (
-            False,
-            False,
-            "Online clone delete failed. Clone name is null",
-            {})
     if len(clone_name) < 1 or len(clone_name) > 31:
-        return (False, False, "Clone create failed. Clone name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Clone create failed. Clone name must be atleast 1 character and not more than 31 characters")
     if base_volume_name is None:
         return (
             False,
             False,
-            "Online clone delete failed. Base volume name is null",
-            {})
+            "Online clone delete failed. Base volume name is null")
     if len(base_volume_name) < 1 or len(base_volume_name) > 31:
-        return (False, False, "Clone create failed. Base volume name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "Clone create failed. Base volume name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
-        client_obj.setSSHOptions(
-            storage_system_ip,
-            storage_system_username,
-            storage_system_password)
         if client_obj.volumeExists(
                 clone_name) and not client_obj.onlinePhysicalCopyExists(
                 base_volume_name,
@@ -268,76 +201,21 @@ is null",
             return (
                 False,
                 False,
-                "Clone/Volume is busy. Cannot be deleted",
-                {})
-    except Exception as e:
-        return (False, False, "Online Clone delete failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
+                "Clone/Volume is busy. Cannot be deleted")
+    except exceptions.ClientException as e:
+        return (False, False, "Online Clone delete failed | %s" % (e))
     return (
         True,
         True,
         "Deleted Online Clone %s successfully." %
-        clone_name,
-        {})
+        clone_name)
 
 
 def main():
+    module = AnsibleModule(argument_spec=hpe3par.online_clone_argument_spec())
 
-    fields = {
-        "state": {
-            "required": True,
-            "choices": ['present', 'absent', 'resync'],
-            "type": 'str'
-        },
-        "storage_system_ip": {
-            "required": True,
-            "type": "str"
-        },
-        "storage_system_username": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "storage_system_password": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "clone_name": {
-            "required": True,
-            "type": "str"
-        },
-        "base_volume_name": {
-            "required": False,
-            "type": "str"
-        },
-        "dest_cpg": {
-            "required": False,
-            "type": "str",
-        },
-        "tpvv": {
-            "required": False,
-            "type": "bool",
-        },
-        "tdvv": {
-            "required": False,
-            "type": "bool",
-        },
-        "snap_cpg": {
-            "required": False,
-            "type": "str",
-        },
-        "compression": {
-            "required": False,
-            "type": "bool",
-        }
-    }
-
-    module = AnsibleModule(argument_spec=fields)
-
-    if client is None:
-        module.fail_json(msg='the python hpe3par_sdk module is required')
+    if not HAS_3PARCLIENT:
+        module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -349,30 +227,47 @@ def main():
     tdvv = module.params["tdvv"]
     snap_cpg = module.params["snap_cpg"]
     compression = module.params["compression"]
+    secure = module.params["secure"]
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
-    client_obj = client.HPE3ParClient(wsapi_url)
+    client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     # States
     if module.params["state"] == "present":
-        return_status, changed, msg, issue_attr_dict = create_online_clone(
-            client_obj, storage_system_username, storage_system_password,
-            base_volume_name, clone_name, dest_cpg, tpvv, tdvv, snap_cpg,
-            compression)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = create_online_clone(
+                client_obj, base_volume_name, clone_name, dest_cpg, tpvv, tdvv, snap_cpg,
+                compression)
+        except Exception as e:
+            module.fail_json(msg="Clone create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "absent":
-        return_status, changed, msg, issue_attr_dict = delete_clone(
-            client_obj, storage_system_ip, storage_system_username,
-            storage_system_password, clone_name, base_volume_name)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            client_obj.setSSHOptions(
+                storage_system_ip,
+                storage_system_username,
+                storage_system_password)
+            return_status, changed, msg = delete_clone(
+                client_obj, clone_name, base_volume_name)
+        except Exception as e:
+            module.fail_json(msg="Clone delete failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "resync":
-        return_status, changed, msg, issue_attr_dict = resync_clone(
-            client_obj, storage_system_ip, storage_system_username,
-            storage_system_password, clone_name)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = resync_clone(
+                client_obj, storage_system_password, clone_name)
+        except Exception as e:
+            module.fail_json(msg="Clone delete failed | %s" % e)
+        finally:
+            client_obj.logout()
 
     if return_status:
-        if issue_attr_dict:
-            module.exit_json(changed=changed, msg=msg, issue=issue_attr_dict)
-        else:
-            module.exit_json(changed=changed, msg=msg)
+        module.exit_json(changed=changed, msg=msg)
     else:
         module.fail_json(msg=msg)
 

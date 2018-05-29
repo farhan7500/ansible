@@ -29,85 +29,76 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = r'''
 ---
-author: "Farhan Nomani (nomani@hpe.com)"
-description: "On HPE 3PAR - Create QoS Rule. - Delete QoS Rule. - Modify QoS
- Rule."
+short_description: Manage HPE 3PAR QoS Rules
+author:
+  - Farhan Nomani (@farhan7500)
+  - Gautham P Hegde (@gautamphegde)
+description: On HPE 3PAR - Create QoS Rule. - Delete QoS Rule. - Modify QoS
+ Rule.
 module: hpe3par_qos
 options:
   bwmax_limit_kb:
     default: -1
     description:
-      - "Bandwidth rate maximum limit in kilobytes per second."
-    required: false
+      - Bandwidth rate maximum limit in kilobytes per second.
   bwmax_limit_op:
     choices:
       - ZERO
       - NOLIMIT
     description:
-      - "When set to 1, the bandwidth maximum limit is 0. When set to 2, the
-       bandwidth maximum limit is none (NoLimit).\n"
-    required: false
+      - When set to 1, the bandwidth maximum limit is 0. When set to 2, the
+       bandwidth maximum limit is none (NoLimit).
   bwmin_goal_kb:
     default: -1
     description:
-      - "Bandwidth rate minimum goal in kilobytes per second."
-    required: false
+      - Bandwidth rate minimum goal in kilobytes per second.
   bwmin_goal_op:
     choices:
       - ZERO
       - NOLIMIT
     description:
-      - "When set to 1, the bandwidth minimum goal is 0. When set to 2, the
-       bandwidth minimum goal is none (NoLimit).\n"
-    required: false
+      - When set to 1, the bandwidth minimum goal is 0. When set to 2, the
+       bandwidth minimum goal is none (NoLimit).
   default_latency:
     default: false
     description:
-      - "If true, set latencyGoal to the default value. If false and the
-       latencyGoal value is positive, then set the value. Default is false.\n"
-    required: false
+      - If true, set latencyGoal to the default value. If false and the
+       latencyGoal value is positive, then set the value. Default is false.
     type: bool
   enable:
     default: false
     description:
-      - "If true, enable the QoS rule for the target object. If false, disable
-       the QoS rule for the target object.\n"
-    required: false
+      - If true, enable the QoS rule for the target object. If false, disable
+       the QoS rule for the target object.
     type: bool
   iomax_limit:
     default: -1
     description:
-      - "I/O-per-second maximum limit."
-    required: false
+      - I/O-per-second maximum limit.
   iomax_limit_op:
     choices:
       - ZERO
       - NOLIMIT
     description:
-      - "When set to 1, the I/O maximum limit is 0. When set to 2, the I/O
-       maximum limit is none (NoLimit).\n"
-    required: false
+      - When set to 1, the I/O maximum limit is 0. When set to 2, the I/O
+       maximum limit is none (NoLimit).
   iomin_goal:
     default: -1
     description:
-      - "I/O-per-second minimum goal."
-    required: false
+      - I/O-per-second minimum goal.
   iomin_goal_op:
     choices:
       - ZERO
       - NOLIMIT
     description:
-      - "When set to 1, the I/O minimum goal is 0. When set to 2, the I/O
-       minimum goal is none (NoLimit).\n"
-    required: false
+      - When set to 1, the I/O minimum goal is 0. When set to 2, the I/O
+       minimum goal is none (NoLimit).
   latency_goal:
     description:
-      - "Latency goal in milliseconds. Do not use with latencyGoaluSecs."
-    required: false
+      - Latency goal in milliseconds. Do not use with latencyGoaluSecs.
   latency_goal_usecs:
     description:
-      - "Latency goal in microseconds. Do not use with latencyGoal."
-    required: false
+      - Latency goal in microseconds. Do not use with latencyGoal.
   priority:
     choices:
       - LOW
@@ -115,12 +106,11 @@ options:
       - HIGH
     default: LOW
     description:
-      - "QoS priority."
-    required: false
+      - QoS priority.
   qos_target_name:
     description:
-      - "The name of the target object on which the new QoS rules will be
-       created."
+      - The name of the target object on which the new QoS rules will be
+       created.
     required: true
   state:
     choices:
@@ -128,84 +118,83 @@ options:
       - absent
       - modify
     description:
-      - "Whether the specified QoS Rule should exist or not. State also
-       provides actions to modify QoS Rule\n"
+      - Whether the specified QoS Rule should exist or not. State also
+       provides actions to modify QoS Rule.
     required: true
   type:
     choices:
       - vvset
       - sys
     description:
-      - "Type of QoS target."
-    required: false
+      - Type of QoS target.
 extends_documentation_fragment: hpe3par
-short_description: "Manage HPE 3PAR QoS Rules"
-version_added: "2.4"
+version_added: 2.6
 '''
 
 EXAMPLES = r'''
     - name: Create QoS
       hpe3par_qos:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=present
-        qos_target_name="{{ qos_target_name }}"
-        priority='NORMAL'
-        bwmin_goal_kb="{{ bwmin_goal_kb }}"
-        bwmax_limit_kb="{{ bwmax_limit_kb }}"
-        iomin_goal_op="{{ iomin_goal_op }}"
-        default_latency="{{ default_latency }}"
-        enable="{{ enable }}"
-        bwmin_goal_op="{{ bwmin_goal_op }}"
-        bwmax_limit_op="{{ bwmax_limit_op }}"
-        latency_goal_usecs="{{ latency_goal_usecs }}"
-        type="{{ type }}"
-        iomax_limit_op="{{ iomax_limit_op }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: present
+        qos_target_name: all_others
+        priority: NORMAL
+        bwmin_goal_kb: 200
+        bwmax_limit_kb: 200
+        iomin_goal_op: NOLIMIT
+        default_latency: true
+        enable: true
+        bwmin_goal_op: NOLIMIT
+        bwmax_limit_op: NOLIMIT
+        latency_goal_usecs: 20
+        type: sys
+        iomax_limit_op: NOLIMIT
 
     - name: Modify QoS
       hpe3par_qos:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=modify
-        qos_target_name="{{ qos_target_name }}"
-        priority="{{ priority }}"
-        bwmin_goal_kb="{{ bwmin_goal_kb }}"
-        bwmax_limit_kb="{{ bwmax_limit_kb }}"
-        iomin_goal_op="{{ iomin_goal_op }}"
-        default_latency="{{ default_latency }}"
-        enable="{{ enable }}"
-        bwmin_goal_op="{{ bwmin_goal_op }}"
-        bwmax_limit_op="{{ bwmax_limit_op }}"
-        latency_goal_usecs="{{ latency_goal_usecs }}"
-        type="{{ type }}"
-        iomax_limit_op="{{ iomax_limit_op }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: modify
+        qos_target_name: all_others
+        priority: NORMAL
+        bwmin_goal_kb: 200
+        bwmax_limit_kb: 200
+        iomin_goal_op: NOLIMIT
+        default_latency: true
+        enable: true
+        bwmin_goal_op: NOLIMIT
+        bwmax_limit_op: NOLIMIT
+        latency_goal_usecs: 20
+        type: sys
+        iomax_limit_op: NOLIMIT
 
     - name: Delete QoS
       hpe3par_qos:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=absent
-        qos_target_name="{{ qos_target_name }}"
-        type="{{ type }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: absent
+        qos_target_name: 'all_others'
+        type: sys
 '''
 
 RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils import hpe3par, basic
 try:
     from hpe3par_sdk import client
+    from hpe3parclient import exceptions
+    HAS_3PARCLIENT = True
 except ImportError:
-    client = None
+    HAS_3PARCLIENT = False
 
 
 def create_qos_rule(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         qos_target_name,
         type,
         priority,
@@ -221,29 +210,15 @@ def create_qos_rule(
         default_latency,
         enable,
         latency_goal_usecs):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "QoS creation failed. Storage system username or password is null",
-            {})
-    if qos_target_name is None:
-        return (
-            False,
-            False,
-            "QoS creation failed. qos_target_name is null",
-            {})
     if len(qos_target_name) < 1 or len(qos_target_name) > 31:
-        return (False, False, "QoS create failed. QoS target name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "QoS create failed. QoS target name must be atleast 1 character and not more than 31 characters")
     if latency_goal is not None and latency_goal_usecs is not None:
         return (
             False,
             False,
             "Attributes latency_goal and latency_goal_usecs cannot be given \
-at the same time for qos rules creation",
-            {})
+at the same time for qos rules creation")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if not client_obj.qosRuleExists(qos_target_name, type):
             qos_rules = construct_qos_rules_map(
                 bwmin_goal_kb,
@@ -265,18 +240,14 @@ at the same time for qos rules creation",
                 qos_rules,
                 getattr(client.HPE3ParClient, type.upper()))
         else:
-            return (True, False, "QoS already present", {})
-    except Exception as e:
-        return (False, False, "QoS creation failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Created QoS successfully.", {})
+            return (True, False, "QoS already present")
+    except exceptions.ClientException as e:
+        return (False, False, "QoS creation failed | %s" % e)
+    return (True, True, "Created QoS successfully.")
 
 
 def modify_qos_rule(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         qos_target_name,
         type,
         priority,
@@ -292,23 +263,9 @@ def modify_qos_rule(
         default_latency,
         enable,
         latency_goal_usecs):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "QoS modification failed. Storage system username or password is \
-null",
-            {})
-    if qos_target_name is None:
-        return (
-            False,
-            False,
-            "QoS modification failed. qos_target_name is null",
-            {})
     if len(qos_target_name) < 1 or len(qos_target_name) > 31:
-        return (False, False, "QoS create failed. QoS target name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "QoS create failed. QoS target name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         qos_rules = construct_qos_rules_map(
             bwmin_goal_kb,
             bwmax_limit_kb,
@@ -324,45 +281,25 @@ null",
             iomin_goal_op,
             iomax_limit_op)
         client_obj.modifyQoSRules(qos_target_name, qos_rules, type)
-    except Exception as e:
-        return (False, False, "QoS modification failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Modified QoS successfully.", {})
+    except exceptions.ClientException as e:
+        return (False, False, "QoS modification failed | %s" % e)
+    return (True, True, "Modified QoS successfully.")
 
 
 def delete_qos_rule(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         qos_target_name,
         type):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "QoS deletion failed. Storage system username or password is null",
-            {})
-    if qos_target_name is None:
-        return (
-            False,
-            False,
-            "QoS deletion failed. qos_target_name is null",
-            {})
     if len(qos_target_name) < 1 or len(qos_target_name) > 31:
-        return (False, False, "QoS create failed. QoS target name must be atleast 1 character and not more than 31 characters", {})
+        return (False, False, "QoS create failed. QoS target name must be atleast 1 character and not more than 31 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.qosRuleExists(qos_target_name, type):
-            client_obj.login(storage_system_username, storage_system_password)
             client_obj.deleteQoSRules(qos_target_name, type)
         else:
-            return (True, False, "QoS does not exist", {})
-    except Exception as e:
-        return (False, False, "QoS delete failed | %s" % e, {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Deleted QoS successfully.", {})
+            return (True, False, "QoS does not exist")
+    except exceptions.ClientException as e:
+        return (False, False, "QoS delete failed | %s" % e)
+    return (True, True, "Deleted QoS successfully.")
 
 
 def construct_qos_rules_map(
@@ -410,91 +347,10 @@ def construct_qos_rules_map(
 
 
 def main():
+    module = AnsibleModule(argument_spec=hpe3par.qos_argument_spec())
 
-    fields = {
-        "state": {
-            "required": True,
-            "choices": ['present', 'absent', 'modify'],
-            "type": 'str'
-        },
-        "storage_system_ip": {
-            "required": True,
-            "type": "str"
-        },
-        "storage_system_username": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "storage_system_password": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "qos_target_name": {
-            "required": True,
-            "type": "str"
-        },
-        "type": {
-            "choices": ['vvset', 'sys'],
-            "type": "str"
-        },
-        "priority": {
-            "choices": ['LOW', 'NORMAL', 'HIGH'],
-            "default": 'LOW',
-            "type": "str"
-        },
-        "bwmin_goal_kb": {
-            "type": "int",
-            "default": -1
-        },
-        "bwmax_limit_kb": {
-            "type": "int",
-            "default": -1
-        },
-        "iomin_goal": {
-            "type": "int",
-            "default": -1
-        },
-        "iomax_limit": {
-            "type": "int",
-            "default": -1
-        },
-        "bwmin_goal_op": {
-            "type": "str",
-            "choices": ['ZERO', 'NOLIMIT']
-        },
-        "bwmax_limit_op": {
-            "type": "str",
-            "choices": ['ZERO', 'NOLIMIT']
-        },
-        "iomin_goal_op": {
-            "type": "str",
-            "choices": ['ZERO', 'NOLIMIT']
-        },
-        "iomax_limit_op": {
-            "type": "str",
-            "choices": ['ZERO', 'NOLIMIT']
-        },
-        "latency_goal": {
-            "type": "int"
-        },
-        "default_latency": {
-            "type": "bool",
-            "default": False
-        },
-        "enable": {
-            "type": "bool",
-            "default": False
-        },
-        "latency_goal_usecs": {
-            "type": "int"
-        }
-    }
-    module = AnsibleModule(argument_spec=fields)
-
-    if client is None:
-        module.fail_json(msg='the python hpe3par_sdk module is required')
+    if not HAS_3PARCLIENT:
+        module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -515,34 +371,50 @@ def main():
     default_latency = module.params["default_latency"]
     enable = module.params["enable"]
     latency_goal_usecs = module.params["latency_goal_usecs"]
+    secure = module.params["secure"]
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
-    client_obj = client.HPE3ParClient(wsapi_url)
+    client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     # States
     if module.params["state"] == "present":
-        return_status, changed, msg, issue_attr_dict = create_qos_rule(
-            client_obj, storage_system_username, storage_system_password,
-            qos_target_name, type, priority, bwmin_goal_kb,
-            bwmax_limit_kb, iomin_goal, iomax_limit, bwmin_goal_op,
-            bwmax_limit_op, iomin_goal_op, iomax_limit_op, latency_goal,
-            default_latency, enable, latency_goal_usecs)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = create_qos_rule(
+                client_obj,
+                qos_target_name, type, priority, bwmin_goal_kb,
+                bwmax_limit_kb, iomin_goal, iomax_limit, bwmin_goal_op,
+                bwmax_limit_op, iomin_goal_op, iomax_limit_op, latency_goal,
+                default_latency, enable, latency_goal_usecs)
+        except Exception as e:
+            module.fail_json(msg="Clone create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "modify":
-        return_status, changed, msg, issue_attr_dict = modify_qos_rule(
-            client_obj, storage_system_username, storage_system_password,
-            qos_target_name, type, priority, bwmin_goal_kb,
-            bwmax_limit_kb, iomin_goal, iomax_limit, bwmin_goal_op,
-            bwmax_limit_op, iomin_goal_op, iomax_limit_op, latency_goal,
-            default_latency, enable, latency_goal_usecs)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = modify_qos_rule(
+                client_obj,
+                qos_target_name, type, priority, bwmin_goal_kb,
+                bwmax_limit_kb, iomin_goal, iomax_limit, bwmin_goal_op,
+                bwmax_limit_op, iomin_goal_op, iomax_limit_op, latency_goal,
+                default_latency, enable, latency_goal_usecs)
+        except Exception as e:
+            module.fail_json(msg="Clone create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "absent":
-        return_status, changed, msg, issue_attr_dict = delete_qos_rule(
-            client_obj, storage_system_username, storage_system_password,
-            qos_target_name, type)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = delete_qos_rule(
+                client_obj,
+                qos_target_name, type)
+        except Exception as e:
+            module.fail_json(msg="Clone create failed | %s" % e)
+        finally:
+            client_obj.logout()
     if return_status:
-        if issue_attr_dict:
-            module.exit_json(changed=changed, msg=msg, issue=issue_attr_dict)
-        else:
-            module.exit_json(changed=changed, msg=msg)
+        module.exit_json(changed=changed, msg=msg)
     else:
         module.fail_json(msg=msg)
 

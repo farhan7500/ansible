@@ -30,9 +30,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = r'''
 ---
 short_description: "Manage HPE 3PAR Host Set"
-author: "Farhan Nomani (nomani@hpe.com)"
-description: "On HPE 3PAR - Create Host Set. - Add Hosts to Host Set. - Remove
- Hosts from Host Set."
+author:
+  - Farhan Nomani (@farhan7500)
+  - Gautham P Hegde (@gautamphegde)
+description: On HPE 3PAR - Create Host Set. - Add Hosts to Host Set. - Remove
+ Hosts from Host Set.
 module: hpe3par_hostset
 options:
   domain:

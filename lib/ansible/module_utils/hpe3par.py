@@ -221,3 +221,106 @@ def offline_clone_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
+    
+def online_clone_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": ['present', 'absent', 'resync'],
+            "type": 'str'
+        },
+        "clone_name": {
+            "required": True,
+            "type": "str"
+        },
+        "base_volume_name": {
+            "type": "str"
+        },
+        "dest_cpg": {
+            "type": "str",
+        },
+        "tpvv": {
+            "type": "bool",
+        },
+        "tdvv": {
+            "type": "bool",
+        },
+        "snap_cpg": {
+            "type": "str",
+        },
+        "compression": {
+            "type": "bool",
+        }
+    }
+    spec.update(storage_system_spec)
+    return spec
+    
+def qos_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": ['present', 'absent', 'modify'],
+            "type": 'str'
+        },
+        "qos_target_name": {
+            "required": True,
+            "type": "str"
+        },
+        "type": {
+            "choices": ['vvset', 'sys'],
+            "type": "str"
+        },
+        "priority": {
+            "choices": ['LOW', 'NORMAL', 'HIGH'],
+            "default": 'LOW',
+            "type": "str"
+        },
+        "bwmin_goal_kb": {
+            "type": "int",
+            "default": -1
+        },
+        "bwmax_limit_kb": {
+            "type": "int",
+            "default": -1
+        },
+        "iomin_goal": {
+            "type": "int",
+            "default": -1
+        },
+        "iomax_limit": {
+            "type": "int",
+            "default": -1
+        },
+        "bwmin_goal_op": {
+            "type": "str",
+            "choices": ['ZERO', 'NOLIMIT']
+        },
+        "bwmax_limit_op": {
+            "type": "str",
+            "choices": ['ZERO', 'NOLIMIT']
+        },
+        "iomin_goal_op": {
+            "type": "str",
+            "choices": ['ZERO', 'NOLIMIT']
+        },
+        "iomax_limit_op": {
+            "type": "str",
+            "choices": ['ZERO', 'NOLIMIT']
+        },
+        "latency_goal": {
+            "type": "int"
+        },
+        "default_latency": {
+            "type": "bool",
+            "default": False
+        },
+        "enable": {
+            "type": "bool",
+            "default": False
+        },
+        "latency_goal_usecs": {
+            "type": "int"
+        }
+    }
+    spec.update(storage_system_spec)
+    return spec

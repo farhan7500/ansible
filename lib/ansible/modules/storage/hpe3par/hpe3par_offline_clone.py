@@ -30,9 +30,11 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 DOCUMENTATION = r'''
 ---
 short_description: "Manage HPE 3PAR Offline Clone"
-author: "Farhan Nomani (nomani@hpe.com)"
-description: "On HPE 3PAR - Create Offline Clone. - Delete Clone. - Resync
- Clone. - Stop Cloning."
+author:
+  - Farhan Nomani (@farhan7500)
+  - Gautham P Hegde (@gautamphegde)
+description: On HPE 3PAR - Create Offline Clone. - Delete Clone. - Resync
+ Clone. - Stop Cloning.
 module: hpe3par_offline_clone
 options:
   base_volume_name:
@@ -162,7 +164,7 @@ def create_offline_clone(
                 True,
                 False,
                 "Clone already exists / creation in progress. Nothing to do.")
-    except Exception as e:
+    except exceptions.ClientException as e:
         return (False, False, "Offline Clone creation failed | %s" % (e))
     return (
         True,
@@ -176,7 +178,7 @@ def resync_clone(
         clone_name):
     try:
         client_obj.resyncPhysicalCopy(clone_name)
-    except Exception as e:
+    except exceptions.ClientException as e:
         return (False, False, "Offline clone resync failed | %s" % e)
     return (
         True,
@@ -204,7 +206,7 @@ def stop_clone(
             client_obj.stopOfflinePhysicalCopy(clone_name)
         else:
             return (True, False, "Offline Cloning not in progress")
-    except Exception as e:
+    except exceptions.ClientException as e:
         return (False, False, "Offline Clone stop failed | %s" % (e))
     return (
         True,
@@ -237,7 +239,7 @@ def delete_clone(
                 False,
                 False,
                 "Clone/Volume is busy. Cannot be deleted")
-    except Exception as e:
+    except exceptions.ClientException as e:
         return (False, False, "Offline Clone delete failed | %s" % (e))
     return (
         True,
@@ -271,17 +273,14 @@ def main():
     # States
     if module.params["state"] == "present":
         try:
-            print ('I am inside create present')
             client_obj.login(storage_system_username, storage_system_password)
             client_obj.setSSHOptions(
                 storage_system_ip,
                 storage_system_username,
                 storage_system_password)
-            print ('ABS')
             return_status, changed, msg = create_offline_clone(
                 client_obj, clone_name, base_volume_name, dest_cpg,
                 skip_zero, save_snapshot, priority)
-            print ('DBS')
         except Exception as e:
             module.fail_json(msg="Clone create failed | %s" % e)
         finally:
