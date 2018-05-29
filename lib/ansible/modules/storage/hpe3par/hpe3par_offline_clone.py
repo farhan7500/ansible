@@ -161,8 +161,7 @@ def create_offline_clone(
             return (
                 True,
                 False,
-                "Clone already exists / creation in progress. Nothing to do.",
-                {})
+                "Clone already exists / creation in progress. Nothing to do.")
     except Exception as e:
         return (False, False, "Offline Clone creation failed | %s" % (e))
     return (
@@ -237,8 +236,7 @@ def delete_clone(
             return (
                 False,
                 False,
-                "Clone/Volume is busy. Cannot be deleted",
-                {})
+                "Clone/Volume is busy. Cannot be deleted")
     except Exception as e:
         return (False, False, "Offline Clone delete failed | %s" % (e))
     return (
@@ -250,7 +248,6 @@ def delete_clone(
 
 def main():
     module = AnsibleModule(argument_spec=hpe3par.offline_clone_argument_spec())
-
     if not HAS_3PARCLIENT:
         module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
@@ -274,14 +271,17 @@ def main():
     # States
     if module.params["state"] == "present":
         try:
+            print ('I am inside create present')
             client_obj.login(storage_system_username, storage_system_password)
             client_obj.setSSHOptions(
                 storage_system_ip,
                 storage_system_username,
                 storage_system_password)
+            print ('ABS')
             return_status, changed, msg = create_offline_clone(
                 client_obj, clone_name, base_volume_name, dest_cpg,
                 skip_zero, save_snapshot, priority)
+            print ('DBS')
         except Exception as e:
             module.fail_json(msg="Clone create failed | %s" % e)
         finally:

@@ -198,30 +198,25 @@ def offline_clone_argument_spec():
             "type": 'str'
         },
         "clone_name": {
-            "required": True,
-            "type": "str"
+            "type": "str",
+            "required": True
         },
         "base_volume_name": {
-            "required": False,
             "type": "str"
         },
         "dest_cpg": {
-            "required": False,
-            "type": "str",
+            "type": "str"
         },
         "save_snapshot": {
-            "required": False,
-            "type": "bool",
+            "type": "bool"
         },
         "priority": {
-            "required": False,
             "type": "str",
             "choices": ['HIGH', 'MEDIUM', 'LOW'],
             "default": "MEDIUM"
         },
         "skip_zero": {
-            "required": False,
-            "type": "bool",
+            "type": "bool"
         }
     }
     spec.update(storage_system_spec)
