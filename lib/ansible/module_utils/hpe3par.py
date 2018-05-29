@@ -419,3 +419,107 @@ def vlun_argument_spec():
             "type": "int"}}
     spec.update(storage_system_spec)
     return spec
+
+def volume_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": ['present',
+                        'absent',
+                        'modify',
+                        'grow',
+                        'grow_to_size',
+                        'change_snap_cpg',
+                        'change_user_cpg',
+                        'convert_type',
+                        'set_snap_cpg'
+                        ],
+            "type": 'str'
+        },
+        "volume_name": {
+            "required": True,
+            "type": "str"
+        },
+        "cpg": {
+            "type": "str",
+            "default": None
+        },
+        "size": {
+            "type": "float",
+            "default": None
+        },
+        "size_unit": {
+            "choices": ['MiB', 'GiB', 'TiB'],
+            "type": 'str',
+            "default": 'MiB'
+        },
+        "snap_cpg": {
+            "type": "str"
+        },
+        "wait_for_task_to_end": {
+            "type": "bool",
+            "default": False
+        },
+        "new_name": {
+            "type": "str",
+        },
+        "expiration_hours": {
+            "type": "int",
+            "default": 0
+        },
+        "retention_hours": {
+            "type": "int",
+            "default": 0
+        },
+        "ss_spc_alloc_warning_pct": {
+            "type": "int",
+            "default": 0
+        },
+        "ss_spc_alloc_limit_pct": {
+            "type": "int",
+            "default": 0
+        },
+        "usr_spc_alloc_warning_pct": {
+            "required": False,
+            "type": "int",
+            "default": 0
+        },
+        "usr_spc_alloc_limit_pct": {
+            "type": "int",
+            "default": 0
+        },
+        "rm_ss_spc_alloc_warning": {
+            "type": "bool",
+            "default": False
+        },
+        "rm_usr_spc_alloc_warning": {
+            "type": "bool",
+            "default": False
+        },
+        "rm_exp_time": {
+            "type": "bool",
+            "default": False
+        },
+        "rm_usr_spc_alloc_limit": {
+            "type": "bool",
+            "default": False
+        },
+        "rm_ss_spc_alloc_limit": {
+            "type": "bool",
+            "default": False
+        },
+        "compression": {
+            "type": "bool",
+            "default": False
+        },
+        "type": {
+            "choices": ['thin', 'thin_dedupe', 'full'],
+            "type": "str",
+            "default": "thin"
+        },
+        "keep_vv": {
+            "type": "str",
+        }
+    }
+    spec.update(storage_system_spec)
+    return spec
