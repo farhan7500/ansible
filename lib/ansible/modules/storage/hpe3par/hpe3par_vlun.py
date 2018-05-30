@@ -151,7 +151,7 @@ RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils import hpe3par, basic
+from ansible.module_utils import hpe3par
 try:
     from hpe3par_sdk import client
     from hpe3parclient import exceptions
@@ -609,7 +609,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = export_volume_to_host(
-                client_obj, 
+                client_obj,
                 volume_name, lunid, host_name, node_val, slot, card_port, autolun)
         except Exception as e:
             module.fail_json(msg="VLUN create failed | %s" % e)
@@ -619,7 +619,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = unexport_volume_from_host(
-                client_obj, 
+                client_obj,
                 volume_name, lunid, host_name, node_val, slot, card_port)
         except Exception as e:
             module.fail_json(msg="VLUN delete failed | %s" % e)
@@ -629,7 +629,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = (
-                export_volumeset_to_hostset(client_obj, 
+                export_volumeset_to_hostset(client_obj,
                                             volume_set_name, lunid, host_set_name,
                                             node_val, slot, card_port,
                                             autolun))
@@ -641,7 +641,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = (
-                unexport_volumeset_from_hostset(client_obj, 
+                unexport_volumeset_from_hostset(client_obj,
                                                 volume_set_name, lunid,
                                                 host_set_name, node_val, slot,
                                                 card_port))
@@ -653,7 +653,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = (
-                export_volumeset_to_host(client_obj, 
+                export_volumeset_to_host(client_obj,
                                          volume_set_name, lunid, host_name,
                                          node_val, slot, card_port, autolun))
         except Exception as e:
@@ -664,7 +664,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = (
-                unexport_volumeset_from_host(client_obj, 
+                unexport_volumeset_from_host(client_obj,
                                              volume_set_name, lunid, host_name,
                                              node_val, slot, card_port))
         except Exception as e:
@@ -675,7 +675,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = (
-                export_volume_to_hostset(client_obj, 
+                export_volume_to_hostset(client_obj,
                                          volume_name, lunid, host_set_name,
                                          node_val, slot, card_port, autolun))
         except Exception as e:
@@ -686,14 +686,14 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = (
-                unexport_volume_from_hostset(client_obj, 
+                unexport_volume_from_hostset(client_obj,
                                              volume_name, lunid, host_set_name,
                                              node_val, slot, card_port))
         except Exception as e:
             module.fail_json(msg="VLUN delete failed | %s" % e)
         finally:
             client_obj.logout()
-            
+
     if return_status:
         module.exit_json(changed=changed, msg=msg)
     else:

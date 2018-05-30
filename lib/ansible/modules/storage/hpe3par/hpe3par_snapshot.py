@@ -173,7 +173,7 @@ RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils import hpe3par, basic
+from ansible.module_utils import hpe3par
 try:
     from hpe3par_sdk import client
     from hpe3parclient import exceptions
@@ -349,7 +349,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = create_snapshot(
-                client_obj, 
+                client_obj,
                 snapshot_name, base_volume_name, read_only, expiration_time,
                 retention_time, expiration_unit, retention_unit)
         except Exception as e:
@@ -360,7 +360,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = modify_snapshot(
-                client_obj, 
+                client_obj,
                 snapshot_name, new_name, expiration_hours, retention_hours,
                 rm_exp_time)
         except Exception as e:
@@ -371,7 +371,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = delete_snapshot(
-                client_obj, 
+                client_obj,
                 snapshot_name)
         except Exception as e:
             module.fail_json(msg="Snapshot delete failed | %s" % e)
@@ -381,7 +381,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = (
-                restore_snapshot_offline(client_obj, 
+                restore_snapshot_offline(client_obj,
                                          snapshot_name, priority,
                                          allow_remote_copy_parent))
         except Exception as e:
@@ -392,7 +392,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = restore_snapshot_online(
-                client_obj, 
+                client_obj,
                 snapshot_name, allow_remote_copy_parent)
         except Exception as e:
             module.fail_json(msg="Snapshot online restore failed | %s" % e)

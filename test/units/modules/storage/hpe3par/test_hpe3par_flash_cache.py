@@ -23,13 +23,12 @@ sys.modules['hpe3par_sdk.client'] = mock.Mock()
 sys.modules['hpe3parclient'] = mock.Mock()
 sys.modules['hpe3parclient.exceptions'] = mock.Mock()
 from ansible.modules.storage.hpe3par import hpe3par_flash_cache as flash_cache
-from ansible.module_utils.basic import AnsibleModule as ansible
 from ansible.module_utils import hpe3par
-import pytest
 
 
 PARAMS_FOR_PRESENT = {'storage_system_ip': '192.168.0.1', 'storage_system_username': 'USER',
                       'storage_system_password': 'PASS', 'size_in_gib': 1024, 'mode': 1, 'state': 'present', 'secure': False}
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.AnsibleModule')
@@ -44,6 +43,7 @@ def test_module_args(mock_module, mock_client):
     mock_module.assert_called_with(
         argument_spec=hpe3par.flash_cache_argument_spec())
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.create_flash_cache')
@@ -55,14 +55,16 @@ def test_main_exit_functionality_success_without_issue_attr_dict(mock_create_fla
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_client.HPE3PARClient.login.return_value=True
-    mock_create_flash_cache.return_value = (True, True, "Created Flash Cache successfully.")
+    mock_client.HPE3PARClient.login.return_value = True
+    mock_create_flash_cache.return_value = (
+        True, True, "Created Flash Cache successfully.")
     flash_cache.main()
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Created Flash Cache successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.AnsibleModule')
@@ -75,14 +77,16 @@ def test_main_exit_functionality_fail(mock_create_flash_cache, mock_module, mock
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_client.HPE3PARClient.login.return_value=True
-    mock_create_flash_cache.return_value = (False, False, "Flash Cache creation failed.")
+    mock_client.HPE3PARClient.login.return_value = True
+    mock_create_flash_cache.return_value = (
+        False, False, "Flash Cache creation failed.")
     flash_cache.main()
 
     # AnsibleModule.exit_json should not be activated
     assert instance.exit_json.call_count == 0
     # AnsibleModule.fail_json should be called
     instance.fail_json.assert_called_with(msg='Flash Cache creation failed.')
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 def test_create_flash_cache_size_in_gib_empty(mock_client):
@@ -97,6 +101,7 @@ def test_create_flash_cache_size_in_gib_empty(mock_client):
         "Flash Cache creation failed. Size is null",
     )
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 def test_create_flash_cache_create_already_present(mock_client):
     """
@@ -104,15 +109,18 @@ def test_create_flash_cache_create_already_present(mock_client):
     """
     result = flash_cache.create_flash_cache(mock_client, 1024, None)
     assert result == (True, False, "Flash Cache already present")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 def test_create_flash_cache_create_sucess_login(mock_client):
     """
     hpe3par flash cache - create a flash cache
     """
     mock_client.HPE3ParClient.flashCacheExists.return_value = False
-    result = flash_cache.create_flash_cache(mock_client.HPE3ParClient, 1024, None)
+    result = flash_cache.create_flash_cache(
+        mock_client.HPE3ParClient, 1024, None)
     assert result == (True, True, "Created Flash Cache successfully.")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 def test_delete_flash_cache_create_absent(mock_client):
@@ -121,7 +129,8 @@ def test_delete_flash_cache_create_absent(mock_client):
     """
     result = flash_cache.delete_flash_cache(mock_client)
     assert result == (True, True, "Deleted Flash Cache successfully.")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 def test_delete_flash_cache_create_present(mock_client):
     """
@@ -129,4 +138,3 @@ def test_delete_flash_cache_create_present(mock_client):
     """
     result = flash_cache.delete_flash_cache(mock_client)
     assert result == (True, True, "Deleted Flash Cache successfully.")
-

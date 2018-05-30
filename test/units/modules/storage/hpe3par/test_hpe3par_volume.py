@@ -70,6 +70,7 @@ def test_module_args(mock_module, mock_client):
     mock_module.assert_called_with(
         argument_spec=hpe3par.volume_argument_spec())
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.delete_volume')
@@ -110,13 +111,15 @@ def test_main_exit_absent(mock_delete_volume, mock_module, mock_client):
     mock_module.params = PARAMS
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_delete_volume.return_value = (True, True, "Deleted volume successfully.")
+    mock_delete_volume.return_value = (
+        True, True, "Deleted volume successfully.")
     hpe3par_volume.main()
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Deleted volume successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.AnsibleModule')
@@ -158,13 +161,15 @@ def test_main_exit_modify(mock_modify_volume, mock_module, mock_client):
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_modify_volume.return_value = (True, True, "Modified volume successfully.")
+    mock_modify_volume.return_value = (
+        True, True, "Modified volume successfully.")
     hpe3par_volume.main()
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Modified volume successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.AnsibleModule')
@@ -214,6 +219,7 @@ def test_main_exit_grow(mock_grow, mock_module, mock_client):
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.grow_to_size')
@@ -254,13 +260,15 @@ def test_main_exit_grow_to_size(mock_grow_to_size, mock_module, mock_client):
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_grow_to_size.return_value = (True, True, "Volume grown to size successfully.")
+    mock_grow_to_size.return_value = (
+        True, True, "Volume grown to size successfully.")
     hpe3par_volume.main()
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Volume grown to size successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.AnsibleModule')
@@ -302,13 +310,15 @@ def test_main_exit_change_snap_cpg(mock_change_snap_cpg, mock_module, mock_clien
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_change_snap_cpg.return_value = (True, True, "Changed snap CPG successfully.")
+    mock_change_snap_cpg.return_value = (
+        True, True, "Changed snap CPG successfully.")
     hpe3par_volume.main()
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Changed snap CPG successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.AnsibleModule')
@@ -350,13 +360,15 @@ def test_main_exit_change_user_cpg(mock_change_user_cpg, mock_module, mock_clien
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_change_user_cpg.return_value = (True, True, "Changed user CPG successfully.")
+    mock_change_user_cpg.return_value = (
+        True, True, "Changed user CPG successfully.")
     hpe3par_volume.main()
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Changed user CPG successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.AnsibleModule')
@@ -398,13 +410,15 @@ def test_main_exit_convert_type(mock_convert_type, mock_module, mock_client):
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_convert_type.return_value = (True, True, "Converted type successfully.")
+    mock_convert_type.return_value = (
+        True, True, "Converted type successfully.")
     hpe3par_volume.main()
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Converted type successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.AnsibleModule')
@@ -446,13 +460,15 @@ def test_main_exit_set_snap_cpg(mock_modify_volume, mock_module, mock_client):
     mock_module.params = PARAMS_FOR_PRESENT
     mock_module.return_value = mock_module
     instance = mock_module.return_value
-    mock_modify_volume.return_value = (True, True, "Set snap CPG successfully.")
+    mock_modify_volume.return_value = (
+        True, True, "Set snap CPG successfully.")
     hpe3par_volume.main()
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Set snap CPG successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 def test_create_snapshot(mock_client):
@@ -461,55 +477,56 @@ def test_create_snapshot(mock_client):
     mock_client.HPE3ParClient.createVolume.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_volume.create_volume(mock_client.HPE3ParClient,
-                                                  'test_volume',
-                                                  'test_cpg',
-                                                  2,
-                                                  'GiB',
-                                                  'thin',
-                                                  True,
-                                                  'snap_cpg'
-                                                  ) == (True, True, "Created volume %s successfully." % 'test_volume')
+                                        'test_volume',
+                                        'test_cpg',
+                                        2,
+                                        'GiB',
+                                        'thin',
+                                        True,
+                                        'snap_cpg'
+                                        ) == (True, True, "Created volume %s successfully." % 'test_volume')
 
     mock_client.HPE3ParClient.volumeExists.return_value = True
     assert hpe3par_volume.create_volume(mock_client.HPE3ParClient,
-                                                  'test_volume',
-                                                  'test_cpg',
-                                                  2,
-                                                  'GiB',
-                                                  'thin',
-                                                  True,
-                                                  'snap_cpg'
-                                                  ) == (True, False, "Volume already present")
+                                        'test_volume',
+                                        'test_cpg',
+                                        2,
+                                        'GiB',
+                                        'thin',
+                                        True,
+                                        'snap_cpg'
+                                        ) == (True, False, "Volume already present")
 
     assert hpe3par_volume.create_volume(mock_client.HPE3ParClient,
-                                                  'test_volume',
-                                                  None,
-                                                  2,
-                                                  'GiB',
-                                                  'thin',
-                                                  True,
-                                                  'snap_cpg'
-                                                  ) == (False, False, "Volume creation failed. Cpg is null")
+                                        'test_volume',
+                                        None,
+                                        2,
+                                        'GiB',
+                                        'thin',
+                                        True,
+                                        'snap_cpg'
+                                        ) == (False, False, "Volume creation failed. Cpg is null")
 
     assert hpe3par_volume.create_volume(mock_client.HPE3ParClient,
-                                                  'test_volume',
-                                                  'test_cpg',
-                                                  None,
-                                                  'GiB',
-                                                  'thin',
-                                                  True,
-                                                  'snap_cpg'
-                                                  ) == (False, False, "Volume creation failed. Volume size is null")
+                                        'test_volume',
+                                        'test_cpg',
+                                        None,
+                                        'GiB',
+                                        'thin',
+                                        True,
+                                        'snap_cpg'
+                                        ) == (False, False, "Volume creation failed. Volume size is null")
 
     assert hpe3par_volume.create_volume(mock_client.HPE3ParClient,
-                                                  'test_volume',
-                                                  'test_cpg',
-                                                  2,
-                                                  None,
-                                                  'thin',
-                                                  True,
-                                                  'snap_cpg'
-                                                  ) == (False, False, "Volume creation failed. Volume size_unit is null")
+                                        'test_volume',
+                                        'test_cpg',
+                                        2,
+                                        None,
+                                        'thin',
+                                        True,
+                                        'snap_cpg'
+                                        ) == (False, False, "Volume creation failed. Volume size_unit is null")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 def test_delete_snapshot(mock_client):
@@ -518,13 +535,14 @@ def test_delete_snapshot(mock_client):
     mock_client.HPE3ParClient.createVolume.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_volume.delete_volume(mock_client.HPE3ParClient,
-                                                  'test_volume'
-                                                  ) == (True, True, "Deleted volume %s successfully." % 'test_volume')
+                                        'test_volume'
+                                        ) == (True, True, "Deleted volume %s successfully." % 'test_volume')
 
     mock_client.HPE3ParClient.volumeExists.return_value = False
     assert hpe3par_volume.delete_volume(mock_client.HPE3ParClient,
-                                                  'test_volume'
-                                                  ) == (True, False, "Volume does not exist")
+                                        'test_volume'
+                                        ) == (True, False, "Volume does not exist")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 def test_grow(mock_client):
@@ -532,22 +550,23 @@ def test_grow(mock_client):
     mock_client.HPE3ParClient.growVolume.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_volume.grow(mock_client.HPE3ParClient,
-                                         'test_volume',
-                                         2,
-                                         'GiB'
-                                         ) == (True, True, "Grown volume %s by %s %s successfully." % ('test_volume', 2, 'GiB'))
+                               'test_volume',
+                               2,
+                               'GiB'
+                               ) == (True, True, "Grown volume %s by %s %s successfully." % ('test_volume', 2, 'GiB'))
 
     assert hpe3par_volume.grow(mock_client.HPE3ParClient,
-                                         'test_volume',
-                                         None,
-                                         'GiB'
-                                         ) == (False, False, "Grow volume failed. Volume size is null")
+                               'test_volume',
+                               None,
+                               'GiB'
+                               ) == (False, False, "Grow volume failed. Volume size is null")
 
     assert hpe3par_volume.grow(mock_client.HPE3ParClient,
-                                         'test_volume',
-                                         2,
-                                         None
-                                         ) == (False, False, "Grow volume failed. Volume size_unit is null")
+                               'test_volume',
+                               2,
+                               None
+                               ) == (False, False, "Grow volume failed. Volume size_unit is null")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 def test_grow_to_size(mock_client):
@@ -557,37 +576,38 @@ def test_grow_to_size(mock_client):
     mock_client.HPE3ParClient.logout.return_value = None
     mock_client.HPE3ParClient.getVolume.return_value.size_mib = 1024
     assert hpe3par_volume.grow_to_size(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 2,
-                                                 'GiB'
-                                                 ) == (True, True, "Grown volume %s to %s %s successfully." % ('test_volume', 2, 'GiB'))
+                                       'test_volume',
+                                       2,
+                                       'GiB'
+                                       ) == (True, True, "Grown volume %s to %s %s successfully." % ('test_volume', 2, 'GiB'))
 
     mock_client.HPE3ParClient.getVolume.return_value.size_mib = 2048
     assert hpe3par_volume.grow_to_size(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 2,
-                                                 'GiB'
-                                                 ) == (True, False, "Volume size already >= %s %s" % (2, 'GiB'))
+                                       'test_volume',
+                                       2,
+                                       'GiB'
+                                       ) == (True, False, "Volume size already >= %s %s" % (2, 'GiB'))
 
     mock_client.HPE3ParClient.volumeExists.return_value = False
     mock_client.HPE3ParClient.getVolume.return_value.size_mib = 1024
     assert hpe3par_volume.grow_to_size(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 2,
-                                                 'GiB'
-                                                 ) == (False, False, "Volume does not exist")
+                                       'test_volume',
+                                       2,
+                                       'GiB'
+                                       ) == (False, False, "Volume does not exist")
 
     assert hpe3par_volume.grow_to_size(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 None,
-                                                 'GiB'
-                                                 ) == (False, False, "Grow_to_size volume failed. Volume size is null")
+                                       'test_volume',
+                                       None,
+                                       'GiB'
+                                       ) == (False, False, "Grow_to_size volume failed. Volume size is null")
 
     assert hpe3par_volume.grow_to_size(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 2,
-                                                 None
-                                                 ) == (False, False, "Grow_to_size volume failed. Volume size_unit is null")
+                                       'test_volume',
+                                       2,
+                                       None
+                                       ) == (False, False, "Grow_to_size volume failed. Volume size_unit is null")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 def test_convert_type(mock_client):
@@ -599,51 +619,52 @@ def test_convert_type(mock_client):
     mock_client.HPE3ParClient.getVolume.return_value.provisioning_type = 2
     mock_client.HPE3ParClient.Task.return_value.task_id = 1
     assert hpe3par_volume.convert_type(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 'test_cpg',
-                                                 'full',
-                                                 True,
-                                                 'keep_vv',
-                                                 True
-                                                 ) == (True, True, "Provisioning type changed to %s successfully." % 'full')
+                                       'test_volume',
+                                       'test_cpg',
+                                       'full',
+                                       True,
+                                       'keep_vv',
+                                       True
+                                       ) == (True, True, "Provisioning type changed to %s successfully." % 'full')
 
     mock_client.HPE3ParClient.getVolume.return_value.provisioning_type = 1
     assert hpe3par_volume.convert_type(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 'test_cpg',
-                                                 'full',
-                                                 True,
-                                                 'keep_vv',
-                                                 True
-                                                 ) == (True, False, "Provisioning type already set to %s" % 'full')
+                                       'test_volume',
+                                       'test_cpg',
+                                       'full',
+                                       True,
+                                       'keep_vv',
+                                       True
+                                       ) == (True, False, "Provisioning type already set to %s" % 'full')
 
     mock_client.HPE3ParClient.volumeExists.return_value = False
     assert hpe3par_volume.convert_type(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 'test_cpg',
-                                                 'full',
-                                                 True,
-                                                 'keep_vv',
-                                                 True
-                                                 ) == (False, False, "Volume does not exist")
+                                       'test_volume',
+                                       'test_cpg',
+                                       'full',
+                                       True,
+                                       'keep_vv',
+                                       True
+                                       ) == (False, False, "Volume does not exist")
 
     assert hpe3par_volume.convert_type(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 None,
-                                                 'full',
-                                                 True,
-                                                 'keep_vv',
-                                                 True
-                                                 ) == (False, False, "Convert volume type failed. User CPG is null")
+                                       'test_volume',
+                                       None,
+                                       'full',
+                                       True,
+                                       'keep_vv',
+                                       True
+                                       ) == (False, False, "Convert volume type failed. User CPG is null")
 
     assert hpe3par_volume.convert_type(mock_client.HPE3ParClient,
-                                                 'test_volume',
-                                                 'test_cpg',
-                                                 None,
-                                                 True,
-                                                 'keep_vv',
-                                                 True
-                                                 ) == (False, False, "Convert volume type failed. Volume type is null")
+                                       'test_volume',
+                                       'test_cpg',
+                                       None,
+                                       True,
+                                       'keep_vv',
+                                       True
+                                       ) == (False, False, "Convert volume type failed. Volume type is null")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 def test_change_snap_cpg(mock_client):
@@ -655,30 +676,31 @@ def test_change_snap_cpg(mock_client):
     mock_client.HPE3ParClient.getVolume.return_value.snap_cpg = 'original_cpg'
     mock_client.HPE3ParClient.Task.return_value.task_id = 1
     assert hpe3par_volume.change_snap_cpg(mock_client.HPE3ParClient,
-                                                    'test_volume',
-                                                    'test_cpg',
-                                                    True
-                                                    ) == (True, True, "Changed snap CPG to %s successfully." % 'test_cpg')
+                                          'test_volume',
+                                          'test_cpg',
+                                          True
+                                          ) == (True, True, "Changed snap CPG to %s successfully." % 'test_cpg')
 
     mock_client.HPE3ParClient.getVolume.return_value.snap_cpg = 'test_cpg'
     assert hpe3par_volume.change_snap_cpg(mock_client.HPE3ParClient,
-                                                    'test_volume',
-                                                    'test_cpg',
-                                                    True
-                                                    ) == (True, False, "Snap CPG already set to %s" % 'test_cpg')
+                                          'test_volume',
+                                          'test_cpg',
+                                          True
+                                          ) == (True, False, "Snap CPG already set to %s" % 'test_cpg')
 
     mock_client.HPE3ParClient.volumeExists.return_value = False
     assert hpe3par_volume.change_snap_cpg(mock_client.HPE3ParClient,
-                                                    'test_volume',
-                                                    'test_cpg',
-                                                    True
-                                                    ) == (False, False, "Volume does not exist")
+                                          'test_volume',
+                                          'test_cpg',
+                                          True
+                                          ) == (False, False, "Volume does not exist")
 
     assert hpe3par_volume.change_snap_cpg(mock_client.HPE3ParClient,
-                                                    'test_volume',
-                                                    None,
-                                                    True
-                                                    ) == (False, False, "Change snap CPG failed. Snap CPG is null")
+                                          'test_volume',
+                                          None,
+                                          True
+                                          ) == (False, False, "Change snap CPG failed. Snap CPG is null")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 def test_change_user_cpg(mock_client):
@@ -690,30 +712,31 @@ def test_change_user_cpg(mock_client):
     mock_client.HPE3ParClient.getVolume.return_value.user_cpg = 'original_cpg'
     mock_client.HPE3ParClient.Task.return_value.task_id = 1
     assert hpe3par_volume.change_user_cpg(mock_client.HPE3ParClient,
-                                                    'test_volume',
-                                                    'test_cpg',
-                                                    True
-                                                    ) == (True, True, "Changed user CPG to %s successfully." % 'test_cpg')
+                                          'test_volume',
+                                          'test_cpg',
+                                          True
+                                          ) == (True, True, "Changed user CPG to %s successfully." % 'test_cpg')
 
     mock_client.HPE3ParClient.getVolume.return_value.user_cpg = 'test_cpg'
     assert hpe3par_volume.change_user_cpg(mock_client.HPE3ParClient,
-                                                    'test_volume',
-                                                    'test_cpg',
-                                                    True
-                                                    ) == (True, False, "user CPG already set to %s" % 'test_cpg')
+                                          'test_volume',
+                                          'test_cpg',
+                                          True
+                                          ) == (True, False, "user CPG already set to %s" % 'test_cpg')
 
     mock_client.HPE3ParClient.volumeExists.return_value = False
     assert hpe3par_volume.change_user_cpg(mock_client.HPE3ParClient,
-                                                    'test_volume',
-                                                    'test_cpg',
-                                                    True
-                                                    ) == (False, False, "Volume does not exist")
+                                          'test_volume',
+                                          'test_cpg',
+                                          True
+                                          ) == (False, False, "Volume does not exist")
 
     assert hpe3par_volume.change_user_cpg(mock_client.HPE3ParClient,
-                                                    'test_volume',
-                                                    None,
-                                                    True
-                                                    ) == (False, False, "Change user CPG failed. Snap CPG is null")
+                                          'test_volume',
+                                          None,
+                                          True
+                                          ) == (False, False, "Change user CPG failed. Snap CPG is null")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_volume.client')
 def test_modify_volume(mock_client):
@@ -721,27 +744,29 @@ def test_modify_volume(mock_client):
     mock_client.HPE3ParClient.modifyVolume.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_volume.modify_volume(mock_client.HPE3ParClient,
-                                                  'test_volume',
-                                                  'new_volume_name',
-                                                  10,
-                                                  100,
-                                                  0,
-                                                  0,
-                                                  0,
-                                                  0,
-                                                  False,
-                                                  False,
-                                                  False,
-                                                  False,
-                                                  False,
-                                                  'test_cpg',
-                                                  'snap_cpg'
-                                                  ) == (True, True, "Modified Volume %s successfully." % 'test_volume')
+                                        'test_volume',
+                                        'new_volume_name',
+                                        10,
+                                        100,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        False,
+                                        False,
+                                        False,
+                                        False,
+                                        False,
+                                        'test_cpg',
+                                        'snap_cpg'
+                                        ) == (True, True, "Modified Volume %s successfully." % 'test_volume')
+
 
 def test_convert_to_binary_multiple():
     assert hpe3par_volume.convert_to_binary_multiple(1, 'MiB'), 1
     assert hpe3par_volume.convert_to_binary_multiple(1, 'GiB'), 1024
     assert hpe3par_volume.convert_to_binary_multiple(1, 'TiB'), 1024 * 1024
+
 
 def get_volume_type():
     assert hpe3par_volume.get_volume_type('thin'), ['TPVV', 1]

@@ -72,7 +72,7 @@ EXAMPLES = r'''
         volumeset_name: sample_volumeset
         setmembers: [sample_volume]
 
-    - name: Add volumes to sample_volumeset 
+    - name: Add volumes to sample_volumeset
       hpe3par_volumeset:
         storage_system_ip: 10.10.0.1
         storage_system_username: username
@@ -103,7 +103,7 @@ RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils import hpe3par, basic
+from ansible.module_utils import hpe3par
 try:
     from hpe3par_sdk import client
     from hpe3parclient import exceptions
@@ -125,7 +125,7 @@ def create_volumeset(
                 volumeset_name, domain, None, setmembers)
         else:
             return (True, False, "volumeset already present")
-    except Exception as e:
+    except exceptions.ClientException as e:
         return (False, False, "volumeset creation failed | %s" % (e))
     return (
         True,
@@ -144,7 +144,7 @@ def delete_volumeset(
             client_obj.deleteVolumeSet(volumeset_name)
         else:
             return (True, False, "volumeset does not exist")
-    except Exception as e:
+    except exceptions.ClientException as e:
         return (False, False, "volumeset delete failed | %s" % (e))
     return (
         True,
@@ -185,7 +185,7 @@ do." %
                     volumeset_name)
         else:
             return (False, False, "Volumeset does not exist")
-    except Exception as e:
+    except exceptions.ClientException as e:
         return (False, False, "Add volumes to volumeset failed | %s" % (e))
     return (True, True, "Added volumes successfully.")
 
@@ -221,7 +221,7 @@ do." %
                     volumeset_name)
         else:
             return (True, False, "Volumeset does not exist")
-    except Exception as e:
+    except exceptions.ClientException as e:
         return (
             False,
             False,

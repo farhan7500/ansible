@@ -32,6 +32,7 @@ PARAMS_FOR_PRESENT = {'state': 'present', 'storage_system_username': 'USER',
                       'storage_system_ip': '192.168.0.1', 'storage_system_password': 'PASS',
                       'hostset_name': 'hostset', 'domain': 'domain', 'setmembers': 'new', 'secure': False}
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.AnsibleModule')
 def test_module_args(mock_module, mock_client):
@@ -44,7 +45,8 @@ def test_module_args(mock_module, mock_client):
     hostset.main()
     mock_module.assert_called_with(
         argument_spec=hpe3par.hostset_argument_spec())
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.create_hostset')
@@ -65,6 +67,7 @@ def test_main_exit_functionality_success_without_issue_attr_dict(mock_hostset, m
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.create_hostset')
@@ -84,7 +87,8 @@ def test_main_exit_functionality_fail(mock_hostset, mock_module, mock_client):
     assert instance.exit_json.call_count == 0
     # AnsibleModule.fail_json should be called
     instance.fail_json.assert_called_with(msg='hostset creation failed.')
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_create_hostset_create_already_present(mock_client):
     """
@@ -93,7 +97,7 @@ def test_create_hostset_create_already_present(mock_client):
     result = hostset.create_hostset(
         mock_client, "host", None, None)
     assert result == (True, False, "Hostset already present")
-    
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_create_hostset_create_sucess(mock_client):
@@ -104,7 +108,8 @@ def test_create_hostset_create_sucess(mock_client):
     result = hostset.create_hostset(
         mock_client.HPE3ParClient, "hostname", "domain", ["member1"])
     assert result == (True, True, "Created Hostset hostname successfully.")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_create_hostset_create_fail(mock_client):
     """
@@ -114,7 +119,8 @@ def test_create_hostset_create_fail(mock_client):
     result = hostset.create_hostset(
         mock_client.HPE3ParClient, "hostname", "domain", ["member1"])
     assert result == (True, False, 'Hostset already present')
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_delete_hostset_success(mock_client):
     """
@@ -124,7 +130,8 @@ def test_delete_hostset_success(mock_client):
     mock_client.return_value = mock_client
     result = hostset.delete_hostset(mock_client, "host")
     assert result == (True, True, 'Deleted Hostset host successfully.')
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_delete_hostset_fail(mock_client):
     """
@@ -134,7 +141,8 @@ def test_delete_hostset_fail(mock_client):
     mock_client.return_value = mock_client
     result = hostset.delete_hostset(mock_client, "host")
     assert result == (True, False, "Hostset does not exist")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_add_host_to_hostset_hostset_setmembers_empty(mock_client):
     """
@@ -147,7 +155,8 @@ def test_add_host_to_hostset_hostset_setmembers_empty(mock_client):
         False,
         False,
         "setmembers delete failed. Setmembers is null")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_add_host_to_hostset_hostset_create_sucess_login(mock_client):
     """
@@ -156,7 +165,8 @@ def test_add_host_to_hostset_hostset_create_sucess_login(mock_client):
     result = hostset.add_hosts(
         mock_client, "host", ["members"])
     assert result == (True, True, 'Added hosts successfully.')
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_add_host_to_hostset_hostset_doesnt_exists(mock_client):
     """
@@ -166,7 +176,8 @@ def test_add_host_to_hostset_hostset_doesnt_exists(mock_client):
     result = hostset.add_hosts(
         mock_client.HPE3ParClient, "hostname", ["member1"])
     assert result == (False, False, "Hostset does not exist")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_add_host_to_hostset_No_new_members_to_add_to_the_Host_set(mock_client):
     """
@@ -176,8 +187,10 @@ def test_add_host_to_hostset_No_new_members_to_add_to_the_Host_set(mock_client):
         "member1"]
     result = hostset.add_hosts(
         mock_client.HPE3ParClient, "hostname", ["member1"])
-    assert result == (True, False, "No new members to add to the Host set hostname. Nothing to do.")
-    
+    assert result == (
+        True, False, "No new members to add to the Host set hostname. Nothing to do.")
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_add_host_to_hostset_No_new_members_to_add_to_the_Host_set_login(mock_client):
     """
@@ -188,6 +201,7 @@ def test_add_host_to_hostset_No_new_members_to_add_to_the_Host_set_login(mock_cl
         mock_client.HPE3ParClient, "hostname", ["member1"])
     assert result == (True, True, 'Added hosts successfully.')
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_add_host_to_hostset_No_new_members_to_add_to_the_Host_set_login_setmembers_none(mock_client):
     """
@@ -197,7 +211,8 @@ def test_add_host_to_hostset_No_new_members_to_add_to_the_Host_set_login_setmemb
     result = hostset.add_hosts(
         mock_client.HPE3ParClient, "hostname", ["member1"])
     assert result == (True, True, 'Added hosts successfully.')
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_remove_host_from_hostset_hostset_setmembers_empty(mock_client):
     """
@@ -211,6 +226,7 @@ def test_remove_host_from_hostset_hostset_setmembers_empty(mock_client):
         False,
         "setmembers delete failed. Setmembers is null")
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_remove_host_from_hostset_hostset_create_sucess_login(mock_client):
     """
@@ -222,7 +238,8 @@ def test_remove_host_from_hostset_hostset_create_sucess_login(mock_client):
     result = hostset.remove_hosts(
         mock_client, "host", ["members"])
     assert result == (True, True, 'Removed hosts successfully.')
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_remove_host_from_hostset_hostset_doesnt_exists(mock_client):
     """
@@ -233,6 +250,7 @@ def test_remove_host_from_hostset_hostset_doesnt_exists(mock_client):
         mock_client.HPE3ParClient, "hostname", ["member1"])
     assert result == (True, False, "Hostset does not exist")
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_remove_host_from_hostset_No_new_members_to_remove_from_the_Host_set(mock_client):
     """
@@ -241,7 +259,9 @@ def test_remove_host_from_hostset_No_new_members_to_remove_from_the_Host_set(moc
     mock_client.HPE3ParClient.getHostSet.return_value.setmembers = []
     result = hostset.remove_hosts(
         mock_client.HPE3ParClient, "hostname", ["member1"])
-    assert result == (True, False, "No members to remove from the Host set hostname. Nothing to do.")
+    assert result == (
+        True, False, "No members to remove from the Host set hostname. Nothing to do.")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 def test_remove_host_from_hostset_No_new_members_to_remove_from_the_Host_set_setmembers_none(mock_client):
@@ -252,7 +272,8 @@ def test_remove_host_from_hostset_No_new_members_to_remove_from_the_Host_set_set
     result = hostset.remove_hosts(
         mock_client.HPE3ParClient, "hostname", ["member1"])
     assert result == (True, True, 'Removed hosts successfully.')
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.create_hostset')
@@ -271,41 +292,43 @@ def test_main_exit_functionality_success(mock_hostset, mock_module, mock_client)
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Created hostset host successfully.")
-		
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.add_hosts')
 def test_main_exit_functionality_success_without_issue_attr_dict_add_hosts(mock_hostset, mock_module, mock_client):
-	"""
-	hpe3par hostset - success check
-	"""
-	# This creates a instance of the AnsibleModule mock.
-	mock_module.params = PARAMS_FOR_PRESENT
-	mock_module.params["state"] = "add_hosts"
-	mock_module.return_value = mock_module
-	instance = mock_module.return_value
-	mock_hostset.return_value = (
-		True, True, "add_hosts hostset host successfully.")
-	hostset.main()
-	# AnsibleModule.exit_json should be called
-	instance.exit_json.assert_called_with(
-		changed=True, msg="add_hosts hostset host successfully.")
+    """
+    hpe3par hostset - success check
+    """
+    # This creates a instance of the AnsibleModule mock.
+    mock_module.params = PARAMS_FOR_PRESENT
+    mock_module.params["state"] = "add_hosts"
+    mock_module.return_value = mock_module
+    instance = mock_module.return_value
+    mock_hostset.return_value = (
+        True, True, "add_hosts hostset host successfully.")
+    hostset.main()
+    # AnsibleModule.exit_json should be called
+    instance.exit_json.assert_called_with(
+        changed=True, msg="add_hosts hostset host successfully.")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_hostset.remove_hosts')
 def test_main_exit_functionality_success_without_issue_attr_dict_remove_hosts(mock_hostset, mock_module, mock_client):
-	"""
-	hpe3par hostset - success check
-	"""
-	# This creates a instance of the AnsibleModule mock.
-	mock_module.params = PARAMS_FOR_PRESENT
-	mock_module.params["state"] = "remove_hosts"
-	mock_module.return_value = mock_module
-	instance = mock_module.return_value
-	mock_hostset.return_value = (
-		True, True, "remove_hosts hostset host successfully.")
-	hostset.main()
-	# AnsibleModule.exit_json should be called
-	instance.exit_json.assert_called_with(
-		changed=True, msg="remove_hosts hostset host successfully.")
+    """
+    hpe3par hostset - success check
+    """
+    # This creates a instance of the AnsibleModule mock.
+    mock_module.params = PARAMS_FOR_PRESENT
+    mock_module.params["state"] = "remove_hosts"
+    mock_module.return_value = mock_module
+    instance = mock_module.return_value
+    mock_hostset.return_value = (
+        True, True, "remove_hosts hostset host successfully.")
+    hostset.main()
+    # AnsibleModule.exit_json should be called
+    instance.exit_json.assert_called_with(
+        changed=True, msg="remove_hosts hostset host successfully.")

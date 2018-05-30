@@ -247,7 +247,7 @@ def add_initiator_chap(
                 False,
                 "Add initiator chap failed. Chap secret hex is false and chap \
 secret less than 32 characters",
-        )
+            )
         if not chap_secret_hex and (
                 len(chap_secret) < 12 or len(chap_secret) > 16):
             return (
@@ -464,7 +464,8 @@ def main():
     module = AnsibleModule(argument_spec=hpe3par.host_argument_spec())
 
     if not HAS_3PARCLIENT:
-        module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
+        module.fail_json(
+            msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -490,7 +491,7 @@ def main():
         try:
             client_obj.login(storage_system_username, storage_system_password)
             return_status, changed, msg = create_host(
-                client_obj,host_name, host_iscsi_names, host_fc_wwns, host_domain,
+                client_obj, host_name, host_iscsi_names, host_fc_wwns, host_domain,
                 host_persona)
         except Exception as e:
             module.fail_json(msg="Host create failed | %s" % e)
@@ -566,7 +567,8 @@ def main():
                 remove_fc_path_from_host(client_obj, host_name,
                                          host_fc_wwns, force_path_removal))
         except Exception as e:
-            module.fail_json(msg="Host remove fc path from host failed | %s" % e)
+            module.fail_json(
+                msg="Host remove fc path from host failed | %s" % e)
         finally:
             client_obj.logout()
     elif module.params["state"] == "add_iscsi_path_to_host":

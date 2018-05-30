@@ -24,9 +24,7 @@ sys.modules['hpe3par_sdk.client.HPE3ParClient'] = mock.Mock()
 sys.modules['hpe3parclient'] = mock.Mock()
 sys.modules['hpe3parclient.exceptions'] = mock.Mock()
 from ansible.modules.storage.hpe3par import hpe3par_host as host
-from ansible.module_utils.basic import AnsibleModule as ansible
 from ansible.module_utils import hpe3par
-import pytest
 
 
 PARAMS_FOR_PRESENT = {'state': 'present', 'storage_system_ip': '192.168.0.1', 'storage_system_username': 'USER',
@@ -48,6 +46,7 @@ def test_module_args(mock_module, mock_client):
     mock_module.assert_called_with(
         argument_spec=hpe3par.host_argument_spec())
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.create_host')
@@ -65,7 +64,8 @@ def test_main_exit_functionality_success_without_issue_attr_dict(mock_host, mock
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Created host host successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.create_host')
@@ -79,14 +79,15 @@ def test_main_exit_functionality_fail(mock_host, mock_module, mock_client):
     instance = mock_module.return_value
     mock_host.return_value = (
         False, False, "Host creation failed.")
-    mock_client.HPE3ParClient.login.return_value=True
+    mock_client.HPE3ParClient.login.return_value = True
     host.main()
 
     # AnsibleModule.exit_json should not be activated
     assert instance.exit_json.call_count == 0
     # AnsibleModule.fail_json should be called
     instance.fail_json.assert_called_with(msg='Host creation failed.')
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_create_host_create_already_present(mock_client):
     """
@@ -95,7 +96,8 @@ def test_create_host_create_already_present(mock_client):
     result = host.create_host(
         mock_client, "host", None, None, None, None)
     assert result == (True, False, "Host already present")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_delete_host_create_already_present(mock_client):
     """
@@ -105,7 +107,8 @@ def test_delete_host_create_already_present(mock_client):
     result = host.delete_host(
         mock_client.HPE3ParClient, "hostname")
     assert result == (True, False, "Host does not exist")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_modify_host_create_success(mock_client):
     """
@@ -114,7 +117,8 @@ def test_modify_host_create_success(mock_client):
     result = host.modify_host(
         mock_client.HPE3ParClient, "host_name", None, None)
     assert result == (True, True, "Modified host host_name successfully.")
-    
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_initiator_chap_chapname_empty(mock_client):
     """
@@ -127,7 +131,8 @@ def test_add_initiator_chap_chapname_empty(mock_client):
         False,
         False,
         "Host modification failed. Chap name is null")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_initiator_chap_chapsecret_empty(mock_client):
     """
@@ -140,7 +145,8 @@ def test_add_initiator_chap_chapsecret_empty(mock_client):
         False,
         False,
         "Host modification failed. chap_secret is null")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_initiator_chap_chaphex_true(mock_client):
     """
@@ -154,6 +160,7 @@ def test_add_initiator_chap_chaphex_true(mock_client):
         False,
         "Add initiator chap failed. Chap secret hex is false and chap secret less than 32 characters"
     )
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_initiator_chap_chaphex_false(mock_client):
@@ -169,6 +176,7 @@ def test_add_initiator_chap_chaphex_false(mock_client):
         "Add initiator chap failed. Chap secret hex is false and chap secret less than 12 characters or more than 16 characters"
     )
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_initiator_chap_success(mock_client):
     """
@@ -181,7 +189,8 @@ def test_add_initiator_chap_success(mock_client):
 
     assert result == (
         True, True, "Added initiator chap.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.initiator_chap_exists')
 def test_add_target_chap_exists(mock_initiator_chap_exists, mock_client):
@@ -189,10 +198,12 @@ def test_add_target_chap_exists(mock_initiator_chap_exists, mock_client):
     hpe3par host - add_initiator_chap
     """
     mock_initiator_chap_exists.return_value = False
-    result = host.add_target_chap(mock_client.HPE3ParClient, "host", "chap", "secretsecretsecretsecretsecret12", True)
+    result = host.add_target_chap(
+        mock_client.HPE3ParClient, "host", "chap", "secretsecretsecretsecretsecret12", True)
 
     assert result == (
         True, False, "Initiator chap does not exist")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_target_chap_success(mock_client):
@@ -207,6 +218,7 @@ def test_add_target_chap_success(mock_client):
     assert result == (
         True, True, "Added target chap.")
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_initiator_chap_exists_sucess(mock_client):
     """
@@ -214,8 +226,9 @@ def test_initiator_chap_exists_sucess(mock_client):
     """
     mock_client.getHost.return_value.initiator_chap_enabled = True
     result = host.initiator_chap_exists(mock_client, "host")
-    assert result == True
-    
+    assert result
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_target_chap_chapname_empty(mock_client):
     """
@@ -228,7 +241,8 @@ def test_add_target_chap_chapname_empty(mock_client):
         False,
         False,
         "Host modification failed. Chap name is null")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_target_chap_chapsecret_empty(mock_client):
     """
@@ -237,11 +251,12 @@ def test_add_target_chap_chapsecret_empty(mock_client):
     result = host.add_target_chap(
         mock_client, "host", "chap", None, None)
 
-    assert result== (
+    assert result == (
         False,
         False,
         "Host modification failed. chap_secret is null")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_target_chap_chaphex_true(mock_client):
     """
@@ -254,7 +269,8 @@ def test_add_target_chap_chaphex_true(mock_client):
         False,
         False,
         "Attribute chap_secret must be 32 hexadecimal characters if chap_secret_hex is true")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_target_chap_chaphex_false(mock_client):
     """
@@ -267,7 +283,8 @@ def test_add_target_chap_chaphex_false(mock_client):
         False,
         False,
         "Attribute chap_secret must be 12 to 16 character if chap_secret_hex is false")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_initiator_chap_exists_sucess(mock_client):
     """
@@ -276,8 +293,8 @@ def test_initiator_chap_exists_sucess(mock_client):
     mock_client.getHost.return_value.initiator_chap_enabled = True
     result = host.initiator_chap_exists(
         mock_client, "host")
-    assert result == True
-    
+    assert result
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_remove_initiator_chap_sucess(mock_client):
@@ -290,7 +307,8 @@ def test_remove_initiator_chap_sucess(mock_client):
 
     assert result == (
         True, True, "Removed initiator chap.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_remove_target_chap_success(mock_client):
     """
@@ -302,7 +320,8 @@ def test_remove_target_chap_success(mock_client):
 
     assert result == (
         True, True, "Removed target chap.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_FC_empty(mock_client):
     """
@@ -315,7 +334,8 @@ def test_add_FC_empty(mock_client):
         False,
         False,
         "Host modification failed. host_fc_wwns is null")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_add_FC_success(mock_client):
     """
@@ -327,7 +347,8 @@ def test_add_FC_success(mock_client):
 
     assert result == (
         True, True, "Added FC path to host successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_remove_fc_fcwwns_empty(mock_client):
     """
@@ -341,6 +362,7 @@ def test_remove_fc_fcwwns_empty(mock_client):
         False,
         "Host modification failed. host_fc_wwns is null")
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_remove_fc_sucess(mock_client):
     """
@@ -352,7 +374,8 @@ def test_remove_fc_sucess(mock_client):
 
     assert result == (
         True, True, "Removed FC path from host successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_remove_iscsi_empty(mock_client):
     """
@@ -366,6 +389,7 @@ def test_remove_iscsi_empty(mock_client):
         False,
         "Host modification failed. host_iscsi_names is null")
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 def test_remove_iscsi_sucess(mock_client):
     """
@@ -377,7 +401,8 @@ def test_remove_iscsi_sucess(mock_client):
 
     assert result == (
         True, True, "Removed ISCSI path from host successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.create_host')
@@ -397,7 +422,7 @@ def test_main_exit_functionality_success_without_issue_attr_dict_present(mock_ho
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Created host host successfully.")
-        
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
@@ -415,7 +440,8 @@ def test_main_exit_functionality_success_without_issue_attr_dict_modify(mock_hos
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Modified host host successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.add_initiator_chap')
@@ -434,7 +460,8 @@ def test_main_exit_functionality_success_without_issue_attr_dict_add_initiator_c
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Add_initiator_chap successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.add_initiator_chap')
@@ -453,7 +480,8 @@ def test_main_exit_functionality_success_without_issue_attr_dict_add_initiator_c
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Add_initiator_chap successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.add_initiator_chap')
@@ -472,7 +500,8 @@ def test_main_exit_functionality_success_without_issue_attr_dict_add_initiator_c
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Add_initiator_chap successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.remove_initiator_chap')
@@ -491,6 +520,7 @@ def test_main_exit_functionality_success_without_issue_attr_dict_remove_initiato
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="Remove_initiator_chap successfully.")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
@@ -513,7 +543,6 @@ def test_main_exit_functionality_success_without_issue_attr_dict_add_target_chap
         changed=True, msg="add_target_chap successfully.")
 
 
-
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.add_fc_path_to_host')
@@ -533,6 +562,7 @@ def test_main_exit_functionality_success_without_issue_attr_dict_add_fc_path_to_
     instance.exit_json.assert_called_with(
         changed=True, msg="add_fc_path_to_host successfully.")
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.remove_fc_path_from_host')
@@ -551,6 +581,7 @@ def test_main_exit_functionality_success_without_issue_attr_dict_remove_fc_path_
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="remove_fc_path_from_host successfully.")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
@@ -573,6 +604,7 @@ def test_main_exit_functionality_success_without_issue_attr_dict_add_iscsi_path_
     # AnsibleModule.fail_json should not be called
     # self.assertEqual(instance.fail_json.call_count, 0)
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.remove_iscsi_path_from_host')
@@ -592,7 +624,8 @@ def test_main_exit_functionality_success_without_issue_attr_dict_remove_iscsi_pa
     # AnsibleModule.exit_json should be called
     instance.exit_json.assert_called_with(
         changed=True, msg="remove_iscsi_path_from_host successfully.")
-        
+
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
 def test_main_exit_functionality_success_without_issue_attr_dict_remove_target_chap(

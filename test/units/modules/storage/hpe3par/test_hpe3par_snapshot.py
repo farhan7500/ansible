@@ -62,6 +62,7 @@ def test_module_args(mock_module, mock_client):
     mock_module.assert_called_with(
         argument_spec=hpe3par.snapshot_argument_spec())
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.create_snapshot')
@@ -102,6 +103,7 @@ def test_main_exit_present(mock_create_snapshot, mock_module, mock_client):
         changed=True, msg="Created Snapshot successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.AnsibleModule')
@@ -144,6 +146,7 @@ def test_main_exit_absent(mock_delete_snapshot, mock_module, mock_client):
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.modify_snapshot')
@@ -184,6 +187,7 @@ def test_main_exit_modify(mock_modify_snapshot, mock_module, mock_client):
         changed=True, msg="Modified Snapshot test_snapshot successfully.")
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.AnsibleModule')
@@ -226,6 +230,7 @@ def test_main_exit_offline_snapshot(mock_restore_snapshot_offline, mock_module, 
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.AnsibleModule')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.restore_snapshot_online')
@@ -267,6 +272,7 @@ def test_main_exit_online_snapshot(mock_restore_snapshot_online, mock_module, mo
     # AnsibleModule.fail_json should not be called
     assert instance.fail_json.call_count == 0
 
+
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 def test_create_snapshot(mock_client):
     mock_client.HPE3ParClient.login.return_value = None
@@ -274,35 +280,36 @@ def test_create_snapshot(mock_client):
     mock_client.HPE3ParClient.createSnapshot.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_snapshot.create_snapshot(mock_client.HPE3ParClient,
-                                                      'test_snapshot',
-                                                      'base_volume',
-                                                      False,
-                                                      10,
-                                                      10,
-                                                      'Hours',
-                                                      'Days'
-                                                      ) == (True, True, "Created Snapshot %s successfully." % 'test_snapshot')
+                                            'test_snapshot',
+                                            'base_volume',
+                                            False,
+                                            10,
+                                            10,
+                                            'Hours',
+                                            'Days'
+                                            ) == (True, True, "Created Snapshot %s successfully." % 'test_snapshot')
 
     mock_client.HPE3ParClient.volumeExists.return_value = True
     assert hpe3par_snapshot.create_snapshot(mock_client.HPE3ParClient,
-                                                      'test_snapshot',
-                                                      'base_volume',
-                                                      False,
-                                                      10,
-                                                      10,
-                                                      'Hours',
-                                                      'Days'
-                                                      ) == (True, False, "Volume/Snapshot already present")
+                                            'test_snapshot',
+                                            'base_volume',
+                                            False,
+                                            10,
+                                            10,
+                                            'Hours',
+                                            'Days'
+                                            ) == (True, False, "Volume/Snapshot already present")
 
     assert hpe3par_snapshot.create_snapshot(mock_client.HPE3ParClient,
-                                                      'test_snapshot',
-                                                      None,
-                                                      False,
-                                                      10,
-                                                      10,
-                                                      'Hours',
-                                                      'Days'
-                                                      ) == (False, False, "Snapshot create failed. Base volume name is null")
+                                            'test_snapshot',
+                                            None,
+                                            False,
+                                            10,
+                                            10,
+                                            'Hours',
+                                            'Days'
+                                            ) == (False, False, "Snapshot create failed. Base volume name is null")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 def test_modify_snapshot(mock_client):
@@ -310,12 +317,12 @@ def test_modify_snapshot(mock_client):
     mock_client.HPE3ParClient.modifyVolume.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_snapshot.modify_snapshot(mock_client.HPE3ParClient,
-                                                      'test_snapshot',
-                                                      'new_snapshot',
-                                                      10,
-                                                      10,
-                                                      True
-                                                      ) == (True, True, "Modified Snapshot %s successfully." % 'test_snapshot')
+                                            'test_snapshot',
+                                            'new_snapshot',
+                                            10,
+                                            10,
+                                            True
+                                            ) == (True, True, "Modified Snapshot %s successfully." % 'test_snapshot')
 
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
@@ -325,13 +332,14 @@ def test_delete_snapshot(mock_client):
     mock_client.HPE3ParClient.deleteVolume.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_snapshot.delete_snapshot(mock_client.HPE3ParClient,
-                                                      'test_snapshot'
-                                                      ) == (True, True, "Deleted Snapshot %s successfully." % 'test_snapshot')
+                                            'test_snapshot'
+                                            ) == (True, True, "Deleted Snapshot %s successfully." % 'test_snapshot')
 
     mock_client.HPE3ParClient.volumeExists.return_value = False
     assert hpe3par_snapshot.delete_snapshot(mock_client.HPE3ParClient,
-                                                      'test_snapshot'
-                                                      ) == (True, False, "Volume/Snapshot does not exist")
+                                            'test_snapshot'
+                                            ) == (True, False, "Volume/Snapshot does not exist")
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 def test_restore_snapshot_offline(mock_client):
@@ -339,10 +347,11 @@ def test_restore_snapshot_offline(mock_client):
     mock_client.HPE3ParClient.promoteVirtualCopy.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_snapshot.restore_snapshot_offline(mock_client.HPE3ParClient,
-                                                               'test_snapshot',
-                                                               'MEDIUM',
-                                                               False
-                                                               ) == (True, True, "Restored offline snapshot %s successfully." % 'test_snapshot')
+                                                     'test_snapshot',
+                                                     'MEDIUM',
+                                                     False
+                                                     ) == (True, True, "Restored offline snapshot %s successfully." % 'test_snapshot')
+
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_snapshot.client')
 def test_restore_snapshot_online(mock_client):
@@ -350,6 +359,6 @@ def test_restore_snapshot_online(mock_client):
     mock_client.HPE3ParClient.promoteVirtualCopy.return_value = None
     mock_client.HPE3ParClient.logout.return_value = None
     assert hpe3par_snapshot.restore_snapshot_online(mock_client.HPE3ParClient,
-                                                              'test_snapshot',
-                                                              False
-                                                              ) == (True, True, "Restored online Snapshot %s successfully." % 'test_snapshot')
+                                                    'test_snapshot',
+                                                    False
+                                                    ) == (True, True, "Restored online Snapshot %s successfully." % 'test_snapshot')

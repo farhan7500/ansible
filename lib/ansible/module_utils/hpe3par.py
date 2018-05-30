@@ -169,6 +169,7 @@ def host_argument_spec():
     spec.update(storage_system_spec)
     return spec
 
+
 def hostset_argument_spec():
     spec = {
         "state": {
@@ -189,6 +190,7 @@ def hostset_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
+
 
 def offline_clone_argument_spec():
     spec = {
@@ -221,7 +223,8 @@ def offline_clone_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
-    
+
+
 def online_clone_argument_spec():
     spec = {
         "state": {
@@ -254,7 +257,8 @@ def online_clone_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
-    
+
+
 def qos_argument_spec():
     spec = {
         "state": {
@@ -324,7 +328,8 @@ def qos_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
-    
+
+
 def snapshot_argument_spec():
     spec = {
         "state": {
@@ -383,7 +388,8 @@ def snapshot_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
-    
+
+
 def vlun_argument_spec():
     spec = {
         "state": {
@@ -419,6 +425,7 @@ def vlun_argument_spec():
             "type": "int"}}
     spec.update(storage_system_spec)
     return spec
+
 
 def volume_argument_spec():
     spec = {
@@ -523,7 +530,8 @@ def volume_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
-    
+
+
 def volumeset_argument_spec():
     spec = {
         "state": {

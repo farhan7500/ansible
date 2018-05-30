@@ -46,7 +46,7 @@ options:
   cpg:
     description:
       - Specifies the name of the CPG from which the volume user space will be
-       allocated.\nRequired with action present, change_user_cpg.
+       allocated. Required with action present, change_user_cpg.
   expiration_hours:
     default: 0
     description:
@@ -94,7 +94,7 @@ options:
     type: bool
   size:
     description:
-      - Specifies the size of the volume.\nRequired with action present, grow,
+      - Specifies the size of the volume. Required with action present, grow,
        grow_to_size
   size_unit:
     choices:
@@ -103,12 +103,12 @@ options:
       - TiB
     default: MiB
     description:
-      - Specifies the unit of the volume size.\nRequired with action present,
+      - Specifies the unit of the volume size. Required with action present,
        grow, grow_to_size.
   snap_cpg:
     description:
       - Specifies the name of the CPG from which the snapshot space will be
-       allocated.\nRequired with action change_snap_cpg.
+       allocated. Required with action change_snap_cpg.
   ss_spc_alloc_limit_pct:
     default: 0
     description:
@@ -142,7 +142,7 @@ options:
       - full
     default: thin
     description:
-      - Specifies the type of the volume.\nRequired with action convert_type"
+      - Specifies the type of the volume. Required with action convert_type"
   usr_spc_alloc_limit_pct:
     default: 0
     description:
@@ -176,9 +176,9 @@ EXAMPLES = r'''
         storage_system_password: password
         state: present
         volume_name: sample_volume
-        cpg="{{ cpg }}"
-        size="{{ size }}"
-        snap_cpg="{{ snap_cpg }}"
+        cpg: sample_cpg
+        size: 1024
+        snap_cpg: sample_cpg
 
     - name: Change provisioning type of Volume sample_volume to thin
       hpe3par_volume:
@@ -188,10 +188,10 @@ EXAMPLES = r'''
         state: convert_type
         volume_name: sample_volume
         type: thin
-        cpg="{{ cpg }}"
-        wait_for_task_to_end="{{ wait_for_task_to_end }}"
+        cpg: sample_cpg
+        wait_for_task_to_end: true
 
-    - name: Set Snap CPG of Volume sample_volume to "{{ snap_cpg }}"
+    - name: Set Snap CPG of Volume sample_volume to sample_cpg
       hpe3par_volume:
         storage_system_ip: 10.10.0.1
         storage_system_username: username
@@ -200,7 +200,7 @@ EXAMPLES = r'''
         volume_name: sample_volume
         snap_cpg: sample_cpg
 
-    - name: Change snap CPG of Volume sample_volume to "{{ snap_cpg }}"
+    - name: Change snap CPG of Volume sample_volume to sample_cpg
       hpe3par_volume:
         storage_system_ip: 10.10.0.1
         storage_system_username: username
@@ -210,7 +210,7 @@ EXAMPLES = r'''
         snap_cpg: sample_cpg
         wait_for_task_to_end: false
 
-    - name: Grow Volume sample_volume by "{{ size }}" {{ size_unit }}"
+    - name: Grow Volume sample_volume by 1 GiB
       hpe3par_volume:
         storage_system_ip: 10.10.0.1
         storage_system_username: username
@@ -220,7 +220,7 @@ EXAMPLES = r'''
         size: 1
         size_unit: GiB
 
-    - name: Grow Volume sample_volume to "{{ size }}" {{ size_unit }}"
+    - name: Grow Volume sample_volume to 5 GiB
       hpe3par_volume:
         storage_system_ip: 10.10.0.1
         storage_system_username: username
@@ -230,7 +230,7 @@ EXAMPLES = r'''
         size: 5
         size_unit: GiB
 
-    - name: Rename Volume sample_volume to {{ new_name }}"
+    - name: Rename Volume sample_volume to renamed_volume
       hpe3par_volume:
         storage_system_ip: 10.10.0.1
         storage_system_username: username
@@ -529,7 +529,7 @@ def convert_type(
         True,
         "Provisioning type changed to %s successfully." %
         type
-		)
+    )
 
 
 def modify_volume(

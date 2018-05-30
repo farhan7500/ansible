@@ -211,7 +211,8 @@ def main():
     module = AnsibleModule(argument_spec=hpe3par.hostset_argument_spec())
 
     if not HAS_3PARCLIENT:
-        module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
+        module.fail_json(
+            msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -225,7 +226,8 @@ def main():
     client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     if len(hostset_name) < 1 or len(hostset_name) > 27:
-        rmodule.fail_json(msg="Hostset name must be atleast 1 character and not more than 27 characters")
+        module.fail_json(
+            msg="Hostset name must be atleast 1 character and not more than 27 characters")
 
     # States
     if module.params["state"] == "present":

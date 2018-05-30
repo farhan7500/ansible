@@ -115,7 +115,7 @@ RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils import hpe3par, basic
+from ansible.module_utils import hpe3par
 try:
     from hpe3par_sdk import client
     from hpe3parclient import exceptions
@@ -251,7 +251,8 @@ def delete_clone(
 def main():
     module = AnsibleModule(argument_spec=hpe3par.offline_clone_argument_spec())
     if not HAS_3PARCLIENT:
-        module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
+        module.fail_json(
+            msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -268,7 +269,8 @@ def main():
     client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     if len(clone_name) < 1 or len(clone_name) > 31:
-        rodule.fail_json(msg="Clone create failed. Clone name must be atleast 1 character and not more than 31 characters")
+        module.fail_json(
+            msg="Clone create failed. Clone name must be atleast 1 character and not more than 31 characters")
 
     # States
     if module.params["state"] == "present":

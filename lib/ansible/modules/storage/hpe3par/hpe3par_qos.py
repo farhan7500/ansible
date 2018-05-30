@@ -184,7 +184,7 @@ RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils import hpe3par, basic
+from ansible.module_utils import hpe3par
 try:
     from hpe3par_sdk import client
     from hpe3parclient import exceptions
@@ -350,7 +350,8 @@ def main():
     module = AnsibleModule(argument_spec=hpe3par.qos_argument_spec())
 
     if not HAS_3PARCLIENT:
-        module.fail_json(msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
+        module.fail_json(
+            msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
