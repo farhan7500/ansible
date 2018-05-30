@@ -50,7 +50,7 @@ options:
   expiration_hours:
     default: 0
     description:
-      - "=Specifies the relative time from the current time that the volume
+      - Specifies the relative time from the current time that the volume
        expires. Value is a positive integer and in the range of 1 to 43,800
        hours, or 1825 days.
   expiration_time:
@@ -101,8 +101,7 @@ options:
       - Unit of Retention Time.
   rm_exp_time:
     description:
-      - Enables (false) or disables (true) resetting the expiration time. If
-       false, and expiration time value is a positive number, then set.
+      - Enables (false) or disables (true) resetting the expiration time. If false, and expiration time value is a positive number, then set.
     type: bool
   snapshot_name:
     description:
@@ -116,8 +115,7 @@ options:
       - restore_offline
       - restore_online
     description:
-      - Whether the specified Snapshot should exist or not. State also
-       provides actions to modify and restore snapshots.
+      - Whether the specified Snapshot should exist or not. State also provides actions to modify and restore snapshots.
     required: true
 extends_documentation_fragment: hpe3par
 version_added: 2.6
@@ -141,7 +139,7 @@ EXAMPLES = r'''
         storage_system_password: password
         state: restore_offline
         snapshot_name: sample_snapshot
-        priority="MEDIUM"
+        priority: MEDIUM
 
     - name: Restore offline Volume snasphot my_ansible_snapshot
       hpe3par_snapshot:

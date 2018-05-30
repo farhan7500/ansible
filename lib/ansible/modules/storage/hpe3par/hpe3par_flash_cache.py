@@ -38,8 +38,7 @@ module: hpe3par_flash_cache
 options:
   size_in_gib:
     description:
-      - Specifies the node pair size of the Flash Cache on
-the system.
+      - Specifies the node pair size of the Flash Cache on the system.
     required: true
   mode:
     description:
@@ -52,7 +51,7 @@ the system.
       - Whether the specified Flash Cache should exist or not.
     required: true
 extends_documentation_fragment: hpe3par
-version_added: "2.6"
+version_added: 2.6
 '''
 
 EXAMPLES = r'''
@@ -126,8 +125,8 @@ def main():
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
-    storage_system_password = module.params["secure"]
-    secure = module.params["storage_system_password"]
+    storage_system_password = module.params["storage_system_password"]
+    secure = module.params["secure"]
     size_in_gib = module.params["size_in_gib"]
     mode = module.params["mode"]
 

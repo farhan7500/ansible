@@ -117,11 +117,6 @@ options:
     description:
       - Whether the specified CPG should exist or not.
     required: true
-  secure:
-    description:
-      - Specifies whether cerificate need to be installed while communicating
-    type: bool
-    default: false
 extends_documentation_fragment: hpe3par
 version_added: 2.6
 '''
@@ -146,7 +141,7 @@ EXAMPLES = r'''
         set_size: 8
         high_availability: MAG
         disk_type: FC
-        secure: False
+        secure: false
 
     - name: Delete CPG sample_cpg
       hpe3par_cpg:
@@ -155,7 +150,7 @@ EXAMPLES = r'''
         storage_system_password: password
         state: absent
         cpg_name: sample_cpg
-        secure: False
+        secure: false
 '''
 
 RETURN = r'''

@@ -33,6 +33,11 @@ options:
       description:
         - The storage system user name.
       required: true
+    secure:
+      description:
+        - Specifies whether cerificate need to be installed while communicating
+      type: bool
+      default: false
 
 requirements:
   - 3PAR OS - 3.2.2 MU6, 3.3.1 MU1
