@@ -29,20 +29,21 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 DOCUMENTATION = r'''
 ---
-author: "Farhan Nomani (nomani@hpe.com)"
-description: "On HPE 3PAR - Create Volume Set. - Add Volumes to Volume Set. -
- Remove Volumes from Volume Set."
+short_description: Manage HPE 3PAR Volume Set
+author:
+  - Farhan Nomani (@farhan7500)
+  - Gautham P Hegde (@gautamphegde)
+description: On HPE 3PAR - Create Volume Set. - Add Volumes to Volume Set. -
+ Remove Volumes from Volume Set.
 module: hpe3par_volumeset
 options:
   domain:
     description:
-      - "The domain in which the VV set or host set will be created."
-    required: false
+      - The domain in which the VV set or host set will be created.
   setmembers:
     description:
-      - "The virtual volume to be added to the set.\nRequired with action
-       add_volumes, remove_volumes\n"
-    required: false
+      - The virtual volume to be added to the set.\nRequired with action
+       add_volumes, remove_volumes.
   state:
     choices:
       - present
@@ -50,173 +51,120 @@ options:
       - add_volumes
       - remove_volumes
     description:
-      - "Whether the specified Volume Set should exist or not. State also
-       provides actions to add or remove volumes from volume set\n"
+      - Whether the specified Volume Set should exist or not. State also
+       provides actions to add or remove volumes from volume set.
     required: true
   volumeset_name:
     description:
-      - "Name of the volume set to be created."
+      - Name of the volume set to be created.
     required: true
 extends_documentation_fragment: hpe3par
-short_description: "Manage HPE 3PAR Volume Set"
-version_added: "2.4"
+version_added: 2.6
 '''
 
 EXAMPLES = r'''
-    - name: Create volume set "{{ volumeset_name }}"
+    - name: Create volume set sample_volumeset
       hpe3par_volumeset:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=present
-        volumeset_name="{{ volumeset_name }}"
-        setmembers="{{ add_vol_setmembers }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: present
+        volumeset_name: sample_volumeset
+        setmembers: [sample_volume]
 
-    - name: Add volumes to Volumeset "{{ volumeset_name }}"
+    - name: Add volumes to sample_volumeset 
       hpe3par_volumeset:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=add_volumes
-        volumeset_name="{{ volumeset_name }}"
-        setmembers="{{ add_vol_setmembers2 }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: add_volumes
+        volumeset_name: sample_volumeset
+        setmembers: [sample_volume2]
 
-    - name: Remove volumes from Volumeset "{{ volumeset_name }}"
+    - name: Remove volumes from Volumeset sample_volumeset
       hpe3par_volumeset:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=remove_volumes
-        volumeset_name="{{ volumeset_name }}"
-        setmembers="{{ remove_vol_setmembers }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: remove_volumes
+        volumeset_name: sample_volumeset
+        setmembers: [sample_volume2]
 
-    - name: Delete Volumeset "{{ volumeset_name }}"
+    - name: Delete Volumeset sample_volumeset
       hpe3par_volumeset:
-        storage_system_ip="{{ storage_system_ip }}"
-        storage_system_username="{{ storage_system_username }}"
-        storage_system_password="{{ storage_system_password }}"
-        state=absent
-        volumeset_name="{{ volumeset_name }}"
+        storage_system_ip: 10.10.0.1
+        storage_system_username: username
+        storage_system_password: password
+        state: absent
+        volumeset_name: sample_volumeset
 '''
 
 RETURN = r'''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils import hpe3par, basic
 try:
     from hpe3par_sdk import client
+    from hpe3parclient import exceptions
+    HAS_3PARCLIENT = True
 except ImportError:
-    client = None
+    HAS_3PARCLIENT = False
 
 
 def create_volumeset(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volumeset_name,
         domain,
         setmembers):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "volumeset create failed. Storage system username or password is \
-null",
-            {})
-    if volumeset_name is None:
-        return (
-            False,
-            False,
-            "volumeset create failed. volumeset name is null",
-            {})
     if len(volumeset_name) < 1 or len(volumeset_name) > 27:
-        return (False, False, "Volume Set create failed. Volume Set name must be atleast 1 character and not more than 27 characters", {})
+        return (False, False, "Volume Set create failed. Volume Set name must be atleast 1 character and not more than 27 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if not client_obj.volumeSetExists(volumeset_name):
             client_obj.createVolumeSet(
                 volumeset_name, domain, None, setmembers)
         else:
-            return (True, False, "volumeset already present", {})
+            return (True, False, "volumeset already present")
     except Exception as e:
-        return (False, False, "volumeset creation failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
+        return (False, False, "volumeset creation failed | %s" % (e))
     return (
         True,
         True,
         "Created volumeset %s successfully." %
-        volumeset_name,
-        {})
+        volumeset_name)
 
 
 def delete_volumeset(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volumeset_name):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "volumeset delete failed. Storage system username or password is \
-null",
-            {})
-    if volumeset_name is None:
-        return (
-            False,
-            False,
-            "volumeset delete failed. volumeset name is null",
-            {})
     if len(volumeset_name) < 1 or len(volumeset_name) > 27:
-        return (False, False, "Volume Set create failed. Volume Set name must be atleast 1 character and not more than 27 characters", {})
+        return (False, False, "Volume Set create failed. Volume Set name must be atleast 1 character and not more than 27 characters")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.volumeSetExists(volumeset_name):
             client_obj.deleteVolumeSet(volumeset_name)
         else:
-            return (True, False, "volumeset does not exist", {})
+            return (True, False, "volumeset does not exist")
     except Exception as e:
-        return (False, False, "volumeset delete failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
+        return (False, False, "volumeset delete failed | %s" % (e))
     return (
         True,
         True,
         "Deleted volumeset %s successfully." %
-        volumeset_name,
-        {})
+        volumeset_name)
 
 
 def add_volumes(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volumeset_name,
         setmembers):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Add volume to volumeset failed. Storage system username or \
-password is null",
-            {})
-    if volumeset_name is None:
-        return (
-            False,
-            False,
-            "Add volume to volumeset failed. Volumeset name is null",
-            {})
     if len(volumeset_name) < 1 or len(volumeset_name) > 27:
-        return (False, False, "Volume Set create failed. Volume Set name must be atleast 1 character and not more than 27 characters", {})
+        return (False, False, "Volume Set create failed. Volume Set name must be atleast 1 character and not more than 27 characters")
     if setmembers is None:
         return (
             False,
             False,
-            "Add volume to volumeset failed. Setmembers is null",
-            {})
+            "Add volume to volumeset failed. Setmembers is null")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.volumeSetExists(volumeset_name):
             existing_set_members = client_obj.getVolumeSet(
                 volumeset_name).setmembers
@@ -234,46 +182,26 @@ password is null",
                     False,
                     "No new members to add to the Volume set %s#. Nothing to \
 do." %
-                    volumeset_name,
-                    {})
+                    volumeset_name)
         else:
-            return (False, False, "Volumeset does not exist", {})
+            return (False, False, "Volumeset does not exist")
     except Exception as e:
-        return (False, False, "Add volumes to volumeset failed | %s" % (e), {})
-    finally:
-        client_obj.logout()
-    return (True, True, "Added volumes successfully.", {})
+        return (False, False, "Add volumes to volumeset failed | %s" % (e))
+    return (True, True, "Added volumes successfully.")
 
 
 def remove_volumes(
         client_obj,
-        storage_system_username,
-        storage_system_password,
         volumeset_name,
         setmembers):
-    if storage_system_username is None or storage_system_password is None:
-        return (
-            False,
-            False,
-            "Remove volume(s) from Volumeset failed. Storage system username \
-or password is null",
-            {})
-    if volumeset_name is None:
-        return (
-            False,
-            False,
-            "Remove volume(s) from Volumeset failed. Volumeset name is null",
-            {})
     if len(volumeset_name) < 1 or len(volumeset_name) > 27:
-        return (False, False, "Volume Set create failed. Volume Set name must be atleast 1 character and not more than 27 characters", {})
+        return (False, False, "Volume Set create failed. Volume Set name must be atleast 1 character and not more than 27 characters")
     if setmembers is None:
         return (
             False,
             False,
-            "Remove volume(s) from Volumeset failed. Setmembers is null",
-            {})
+            "Remove volume(s) from Volumeset failed. Setmembers is null")
     try:
-        client_obj.login(storage_system_username, storage_system_password)
         if client_obj.volumeSetExists(volumeset_name):
             existing_set_members = client_obj.getVolumeSet(
                 volumeset_name).setmembers
@@ -290,58 +218,27 @@ or password is null",
                     False,
                     "No members to remove to the Volume set %s. Nothing to \
 do." %
-                    volumeset_name,
-                    {})
+                    volumeset_name)
         else:
-            return (True, False, "Volumeset does not exist", {})
+            return (True, False, "Volumeset does not exist")
     except Exception as e:
         return (
             False,
             False,
             "Remove volumes from volumeset failed | %s" %
-            e,
-            {})
+            e)
     finally:
         client_obj.logout()
-    return (True, True, "Removed volumes successfully.", {})
+    return (True, True, "Removed volumes successfully.")
 
 
 def main():
-    fields = {
-        "state": {
-            "required": True,
-            "choices": ['present', 'absent', 'add_volumes', 'remove_volumes'],
-            "type": 'str'
-        },
-        "storage_system_ip": {
-            "required": True,
-            "type": "str"
-        },
-        "storage_system_username": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "storage_system_password": {
-            "required": True,
-            "type": "str",
-            "no_log": True
-        },
-        "volumeset_name": {
-            "required": True,
-            "type": "str"
-        },
-        "domain": {
-            "type": "str"
-        },
-        "setmembers": {
-            "type": "list"
-        }
-    }
-    module = AnsibleModule(argument_spec=fields)
 
-    if client is None:
-        module.fail_json(msg='the python hpe3par_sdk module is required')
+    module = AnsibleModule(argument_spec=hpe3par.volumeset_argument_spec())
+
+    if not HAS_3PARCLIENT:
+        module.fail_json(
+            msg='the python hpe3par_sdk library is required (https://pypi.org/project/hpe3par_sdk)')
 
     storage_system_ip = module.params["storage_system_ip"]
     storage_system_username = module.params["storage_system_username"]
@@ -349,33 +246,55 @@ def main():
     volumeset_name = module.params["volumeset_name"]
     domain = module.params["domain"]
     setmembers = module.params["setmembers"]
+    secure = module.params["secure"]
 
     wsapi_url = 'https://%s:8080/api/v1' % storage_system_ip
-    client_obj = client.HPE3ParClient(wsapi_url)
+    client_obj = client.HPE3ParClient(wsapi_url, secure)
 
     # States
     if module.params["state"] == "present":
-        return_status, changed, msg, issue_attr_dict = create_volumeset(
-            client_obj, storage_system_username, storage_system_password,
-            volumeset_name, domain, setmembers)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = create_volumeset(
+                client_obj,
+                volumeset_name, domain, setmembers)
+        except Exception as e:
+            module.fail_json(msg="Snapshot create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "absent":
-        return_status, changed, msg, issue_attr_dict = delete_volumeset(
-            client_obj, storage_system_username, storage_system_password,
-            volumeset_name)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = delete_volumeset(
+                client_obj,
+                volumeset_name)
+        except Exception as e:
+            module.fail_json(msg="Snapshot create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "add_volumes":
-        return_status, changed, msg, issue_attr_dict = add_volumes(
-            client_obj, storage_system_username, storage_system_password,
-            volumeset_name, setmembers)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = add_volumes(
+                client_obj,
+                volumeset_name, setmembers)
+        except Exception as e:
+            module.fail_json(msg="Snapshot create failed | %s" % e)
+        finally:
+            client_obj.logout()
     elif module.params["state"] == "remove_volumes":
-        return_status, changed, msg, issue_attr_dict = remove_volumes(
-            client_obj, storage_system_username, storage_system_password,
-            volumeset_name, setmembers)
+        try:
+            client_obj.login(storage_system_username, storage_system_password)
+            return_status, changed, msg = remove_volumes(
+                client_obj,
+                volumeset_name, setmembers)
+        except Exception as e:
+            module.fail_json(msg="Snapshot create failed | %s" % e)
+        finally:
+            client_obj.logout()
 
     if return_status:
-        if issue_attr_dict:
-            module.exit_json(changed=changed, msg=msg, issue=issue_attr_dict)
-        else:
-            module.exit_json(changed=changed, msg=msg)
+        module.exit_json(changed=changed, msg=msg)
     else:
         module.fail_json(msg=msg)
 

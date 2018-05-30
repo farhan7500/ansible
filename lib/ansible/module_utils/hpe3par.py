@@ -523,3 +523,24 @@ def volume_argument_spec():
     }
     spec.update(storage_system_spec)
     return spec
+    
+def volumeset_argument_spec():
+    spec = {
+        "state": {
+            "required": True,
+            "choices": ['present', 'absent', 'add_volumes', 'remove_volumes'],
+            "type": 'str'
+        },
+        "volumeset_name": {
+            "required": True,
+            "type": "str"
+        },
+        "domain": {
+            "type": "str"
+        },
+        "setmembers": {
+            "type": "list"
+        }
+    }
+    spec.update(storage_system_spec)
+    return spec

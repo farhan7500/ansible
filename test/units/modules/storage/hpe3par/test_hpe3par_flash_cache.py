@@ -29,7 +29,7 @@ import pytest
 
 
 PARAMS_FOR_PRESENT = {'storage_system_ip': '192.168.0.1', 'storage_system_username': 'USER',
-                      'storage_system_password': 'PASS', 'size_in_gib': 1024, 'mode': 1, 'state': 'present'}
+                      'storage_system_password': 'PASS', 'size_in_gib': 1024, 'mode': 1, 'state': 'present', 'secure': False}
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_flash_cache.AnsibleModule')
