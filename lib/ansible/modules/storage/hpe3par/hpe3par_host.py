@@ -149,6 +149,7 @@ from ansible.module_utils import hpe3par
 try:
     from hpe3par_sdk import client
     from hpe3parclient import exceptions
+    from hpe3parclient import client as python_3parclient
     HAS_3PARCLIENT = True
 except ImportError:
     HAS_3PARCLIENT = False
@@ -260,7 +261,7 @@ secret less than 12 characters or more than 16 characters",
                               {'chapOperationMode':
                                client.HPE3ParClient.CHAP_INITIATOR,
                                'chapOperation':
-                               HPE3ParClient.HOST_EDIT_ADD,
+                               python_3parclient.HPE3ParClient.HOST_EDIT_ADD,
                                'chapName': chap_name,
                                'chapSecret': chap_secret,
                                'chapSecretHex': chap_secret_hex})
@@ -277,7 +278,7 @@ def remove_initiator_chap(
     try:
         client_obj.modifyHost(
             host_name, {
-                'chapOperation': HPE3ParClient.HOST_EDIT_REMOVE})
+                'chapOperation': python_3parclient.HPE3ParClient.HOST_EDIT_REMOVE})
     except exceptions.ClientException as e:
         return (False, False, "Remove initiator chap failed | %s" % e)
     return (True, True, "Removed initiator chap.")
@@ -333,7 +334,7 @@ chap_secret_hex is false',
                 host_name):
             mod_request = {
                 'chapOperationMode': client.HPE3ParClient.CHAP_TARGET,
-                'chapOperation': HPE3ParClient.HOST_EDIT_ADD,
+                'chapOperation': python_3parclient.HPE3ParClient.HOST_EDIT_ADD,
                 'chapName': chap_name,
                 'chapSecret': chap_secret,
                 'chapSecretHex': chap_secret_hex}
@@ -352,7 +353,7 @@ def remove_target_chap(
         return (False, False, "Host create failed. Host name must be atleast 1 character and not more than 31 characters")
     try:
         mod_request = {
-            'chapOperation': HPE3ParClient.HOST_EDIT_REMOVE,
+            'chapOperation': python_3parclient.HPE3ParClient.HOST_EDIT_REMOVE,
             'chapRemoveTargetOnly': True}
         client_obj.modifyHost(host_name, mod_request)
     except exceptions.ClientException as e:
@@ -376,7 +377,7 @@ def add_fc_path_to_host(
         )
     try:
         mod_request = {
-            'pathOperation': HPE3ParClient.HOST_EDIT_ADD,
+            'pathOperation': python_3parclient.HPE3ParClient.HOST_EDIT_ADD,
             'FCWWNs': host_fc_wwns}
         client_obj.modifyHost(host_name, mod_request)
     except exceptions.ClientException as e:
@@ -399,7 +400,7 @@ def remove_fc_path_from_host(
         )
     try:
         mod_request = {
-            'pathOperation': HPE3ParClient.HOST_EDIT_REMOVE,
+            'pathOperation': python_3parclient.HPE3ParClient.HOST_EDIT_REMOVE,
             'FCWWNs': host_fc_wwns,
             'forcePathRemoval': force_path_removal}
         client_obj.modifyHost(host_name, mod_request)
@@ -422,7 +423,7 @@ def add_iscsi_path_to_host(
         )
     try:
         mod_request = {
-            'pathOperation': HPE3ParClient.HOST_EDIT_ADD,
+            'pathOperation': python_3parclient.HPE3ParClient.HOST_EDIT_ADD,
             'iSCSINames': host_iscsi_names}
         client_obj.modifyHost(host_name, mod_request)
     except exceptions.ClientException as e:
@@ -445,7 +446,7 @@ def remove_iscsi_path_from_host(
         )
     try:
         mod_request = {
-            'pathOperation': HPE3ParClient.HOST_EDIT_REMOVE,
+            'pathOperation': python_3parclient.HPE3ParClient.HOST_EDIT_REMOVE,
             'iSCSINames': host_iscsi_names,
             'forcePathRemoval': force_path_removal}
         client_obj.modifyHost(host_name, mod_request)

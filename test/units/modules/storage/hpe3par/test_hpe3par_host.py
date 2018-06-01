@@ -20,9 +20,9 @@ import mock
 import sys
 sys.modules['hpe3par_sdk'] = mock.Mock()
 sys.modules['hpe3par_sdk.client'] = mock.Mock()
-sys.modules['hpe3par_sdk.client.HPE3ParClient'] = mock.Mock()
 sys.modules['hpe3parclient'] = mock.Mock()
 sys.modules['hpe3parclient.exceptions'] = mock.Mock()
+sys.modules['hpe3parclient.client.HPE3ParClient'] = mock.Mock()
 from ansible.modules.storage.hpe3par import hpe3par_host as host
 from ansible.module_utils import hpe3par
 
@@ -401,7 +401,6 @@ def test_remove_iscsi_sucess(mock_client):
 
     assert result == (
         True, True, "Removed ISCSI path from host successfully.")
-
 
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.client')
 @mock.patch('ansible.modules.storage.hpe3par.hpe3par_host.AnsibleModule')
