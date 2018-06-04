@@ -51,7 +51,7 @@ options:
       - Whether the specified Flash Cache should exist or not.
     required: true
 extends_documentation_fragment: hpe3par
-version_added: 2.6
+version_added: 2.7
 '''
 
 EXAMPLES = r'''

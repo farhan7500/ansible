@@ -118,7 +118,7 @@ options:
       - Whether the specified Snapshot should exist or not. State also provides actions to modify and restore snapshots.
     required: true
 extends_documentation_fragment: hpe3par
-version_added: 2.6
+version_added: 2.7
 '''
 
 EXAMPLES = r'''

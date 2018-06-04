@@ -117,8 +117,13 @@ options:
     description:
       - Whether the specified CPG should exist or not.
     required: true
+  secure:
+    description:
+      - Specifies whether cerificate need to be installed while communicating
+    type: bool
+    default: false
 extends_documentation_fragment: hpe3par
-version_added: 2.6
+version_added: 2.7
 '''
 
 

@@ -128,7 +128,7 @@ options:
     description:
       - Type of QoS target.
 extends_documentation_fragment: hpe3par
-version_added: 2.6
+version_added: 2.7
 '''
 
 EXAMPLES = r'''

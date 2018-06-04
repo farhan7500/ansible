@@ -84,11 +84,11 @@ options:
     required: true
   volume_set_name:
     description:
-      - Name of the VV set to export.\nRequired with action
+      - Name of the VV set to export. Required with action
        export_volumeset_to_host, unexport_volumeset_from_host,
        export_volumeset_to_hostset, unexport_volumeset_from_hostset.
 extends_documentation_fragment: hpe3par
-version_added: 2.6
+version_added: 2.7
 '''
 
 EXAMPLES = r'''

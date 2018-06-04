@@ -58,7 +58,7 @@ options:
       ['present', 'absent', 'add_hosts', 'remove_hosts']
     required: true
 extends_documentation_fragment: hpe3par
-version_added: 2.6
+version_added: 2.7
 '''
 
 EXAMPLES = r'''

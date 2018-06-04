@@ -74,7 +74,7 @@ options:
       - Enables (true) or disables (false) whether the online copy is a TPVV.
     type: bool
 extends_documentation_fragment: hpe3par
-version_added: "2.6"
+version_added: 2.7
 '''
 
 EXAMPLES = r'''
