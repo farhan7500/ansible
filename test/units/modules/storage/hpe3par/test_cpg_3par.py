@@ -199,51 +199,51 @@ def test_create_cpg(mock_client):
     mock_client.HPE3ParClient.createCPG.return_value = True
 
     assert cpg_3par.create_cpg(mock_client.HPE3ParClient,
-                                  'test_cpg',
-                                  'test_domain',
-                                  32768,
-                                  'MiB',
-                                  32768,
-                                  'MiB',
-                                  32768,
-                                  'MiB',
-                                  'R6',
-                                  8,
-                                  'MAG',
-                                  'FC'
-                                  ) == (True, True, "Created CPG %s successfully." % 'test_cpg')
+                               'test_cpg',
+                               'test_domain',
+                               32768,
+                               'MiB',
+                               32768,
+                               'MiB',
+                               32768,
+                               'MiB',
+                               'R6',
+                               8,
+                               'MAG',
+                               'FC'
+                               ) == (True, True, "Created CPG %s successfully." % 'test_cpg')
 
     mock_client.HPE3ParClient.cpgExists.return_value = True
     assert cpg_3par.create_cpg(mock_client.HPE3ParClient,
-                                  'test_cpg',
-                                  'test_domain',
-                                  32768,
-                                  'MiB',
-                                  32768,
-                                  'MiB',
-                                  32768,
-                                  'MiB',
-                                  'R6',
-                                  8,
-                                  'MAG',
-                                  'FC'
-                                  ) == (True, False, 'CPG already present')
+                               'test_cpg',
+                               'test_domain',
+                               32768,
+                               'MiB',
+                               32768,
+                               'MiB',
+                               32768,
+                               'MiB',
+                               'R6',
+                               8,
+                               'MAG',
+                               'FC'
+                               ) == (True, False, 'CPG already present')
 
     cpg_3par.validate_set_size = mock.Mock(return_value=False)
     assert cpg_3par.create_cpg(mock_client.HPE3ParClient,
-                                  'test_cpg',
-                                  'test_domain',
-                                  32768,
-                                  'MiB',
-                                  32768,
-                                  'MiB',
-                                  32768,
-                                  'MiB',
-                                  'R6',
-                                  3,
-                                  'MAG',
-                                  'FC'
-                                  ) == (False, False, 'Set size 3 not part of RAID set R6')
+                               'test_cpg',
+                               'test_domain',
+                               32768,
+                               'MiB',
+                               32768,
+                               'MiB',
+                               32768,
+                               'MiB',
+                               'R6',
+                               3,
+                               'MAG',
+                               'FC'
+                               ) == (False, False, 'Set size 3 not part of RAID set R6')
 
 
 @mock.patch('ansible.modules.storage.hpe3par.cpg_3par.client')
@@ -254,14 +254,14 @@ def test_delete_cpg(mock_client):
     mock_client.HPE3ParClient.deleteCPG.return_value = True
 
     assert cpg_3par.delete_cpg(mock_client.HPE3ParClient,
-                                  'test_cpg'
-                                  ) == (True, True, "Deleted CPG %s successfully." % 'test_cpg')
+                               'test_cpg'
+                               ) == (True, True, "Deleted CPG %s successfully." % 'test_cpg')
 
     mock_client.HPE3ParClient.cpgExists.return_value = False
 
     assert cpg_3par.delete_cpg(mock_client.HPE3ParClient,
-                                  'test_cpg'
-                                  ) == (True, False, "CPG does not exist")
+                               'test_cpg'
+                               ) == (True, False, "CPG does not exist")
     assert cpg_3par.delete_cpg(mock_client.HPE3ParClient,
-                                  None
-                                  ) == (True, False, "CPG does not exist")
+                               None
+                               ) == (True, False, "CPG does not exist")
